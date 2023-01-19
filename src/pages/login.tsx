@@ -1,4 +1,4 @@
-import TextLink, { ButtonLink } from "@/components/ButtonLink";
+import styled from "@emotion/styled";
 import {
   Flex,
   Button,
@@ -6,21 +6,34 @@ import {
   Input,
   Title,
   NumberInput,
-  Menu
+  Menu,
+  DEFAULT_THEME,
+  createPolymorphicComponent,
+  ButtonProps,
+  UnstyledButton
 } from "@mantine/core";
-import Link from "next/link";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 
-interface FormLogin {
-  fullName?: string;
-  nip?: number;
-}
+const _ButtonLink = styled(UnstyledButton)`
+  color: ${DEFAULT_THEME.black};
+  text-decoration: underline;
+  padding: 0;
+  &:hover {
+    color: ${DEFAULT_THEME.colors.dark[3]};
+    cursor: pointer;
+  }
+`;
+
+const InheritStyledForm = styled.form`
+  all: inherit;
+`;
+
+const ButtonLink = createPolymorphicComponent<"button", ButtonProps>(
+  _ButtonLink
+);
 
 export default function Login() {
-  const [contactOpened, setContactOpened] = useState(false);
-
   const form = useForm({
     initialValues: {
       fullName: "",
@@ -36,18 +49,22 @@ export default function Login() {
     }
   ];
 
+  const getAuth = form.onSubmit((values) => console.log(values));
+
   return (
     <Flex h="100vh" justify="center" align="center">
-      <Flex gap="lg" direction="column" wrap="wrap">
+      <Flex
+        gap="lg"
+        maw={468}
+        miw="fit-content"
+        w="max"
+        direction="column"
+        wrap="wrap">
         <Flex direction="column" align="center">
           <Title order={3}>SPPS</Title>
           <Text c="dark.3">Sistem Pengelolaan Data Absensi Sekolah</Text>
         </Flex>
-        <form
-          onSubmit={form.onSubmit((values) => console.log(values))}
-          style={{
-            all: "inherit"
-          }}>
+        <InheritStyledForm onSubmit={getAuth}>
           <Flex direction="column" align="center" gap="xs">
             <Title order={5}>Login</Title>
             <Input
@@ -67,7 +84,7 @@ export default function Login() {
               Continue
             </Button>
           </Flex>
-        </form>
+        </InheritStyledForm>
         <Flex direction="column" align="center">
           <Text fz="xs" fw={600}>
             Tidak punya akun?
@@ -83,6 +100,7 @@ export default function Login() {
                 Hubungi admin untuk pembuatan akun baru
               </ButtonLink>
             </Menu.Target>
+
             <Menu.Dropdown>
               <Menu.Label>Kontak</Menu.Label>
               {whatsappContacts.map(({ fullName, number }) => (
@@ -96,7 +114,7 @@ export default function Login() {
                   target="_blank">
                   <Flex direction="column">
                     <Text fz="sm">{fullName}</Text>
-                    <Text fz="xs" fw="bold" c="dark.3">
+                    <Text fz="xs" fw={600} c="dark.3">
                       {number}
                     </Text>
                   </Flex>
