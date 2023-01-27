@@ -68,12 +68,12 @@ export default function Login() {
         direction="column"
         wrap="wrap">
         <Flex direction="column" align="center">
-          <Title order={3}>SPPS</Title>
-          <Text c="dark.3">Sistem Pengelolaan Data Absensi Sekolah</Text>
+          <Title order={1}>SPPS</Title>
+          <Text c="dark.3">Sistem Pengelolaan Data Presensi Siswa</Text>
         </Flex>
         <InheritStyledForm onSubmit={getAuth}>
           <Flex direction="column" align="center" gap="sm">
-            <Title order={5}>Login</Title>
+            <Title order={4}>Login</Title>
             <Input
               w="100%"
               name="fullName"
@@ -109,7 +109,7 @@ export default function Login() {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Kontak</Menu.Label>
+              <Menu.Label>Daftar Kontak</Menu.Label>
               {whatsappContacts.map(({ fullName, number }) => (
                 <Menu.Item
                   key={number}
