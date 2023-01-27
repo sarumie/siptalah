@@ -10,10 +10,16 @@ import {
   DEFAULT_THEME,
   createPolymorphicComponent,
   ButtonProps,
-  UnstyledButton
+  UnstyledButton,
+  useMantineTheme
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import Link from "next/link";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
+
+const InheritStyledForm = styled.form`
+  all: inherit;
+`;
 
 const _ButtonLink = styled(UnstyledButton)`
   color: ${DEFAULT_THEME.black};
@@ -25,15 +31,12 @@ const _ButtonLink = styled(UnstyledButton)`
   }
 `;
 
-const InheritStyledForm = styled.form`
-  all: inherit;
-`;
-
 const ButtonLink = createPolymorphicComponent<"button", ButtonProps>(
   _ButtonLink
 );
 
 export default function Login() {
+  const theme = useMantineTheme();
   const form = useForm({
     initialValues: {
       fullName: "",
@@ -42,10 +45,14 @@ export default function Login() {
   });
 
   const whatsappContacts = [
-    { fullName: "Puan Nijika Kurnia", number: "+6282649273472" },
+    { fullName: "Muhammad Iqbal", number: "+6282649273472" },
     {
       fullName: "Jonathan Kurniawan",
       number: "+628327428174"
+    },
+    {
+      fullName: "Kita Abdurrahman Saleh",
+      number: "+6291047238394"
     }
   ];
 
@@ -65,7 +72,7 @@ export default function Login() {
           <Text c="dark.3">Sistem Pengelolaan Data Absensi Sekolah</Text>
         </Flex>
         <InheritStyledForm onSubmit={getAuth}>
-          <Flex direction="column" align="center" gap="xs">
+          <Flex direction="column" align="center" gap="sm">
             <Title order={5}>Login</Title>
             <Input
               w="100%"
@@ -80,7 +87,7 @@ export default function Login() {
               hideControls
               {...form.getInputProps("nip")}
             />
-            <Button type="submit" fullWidth>
+            <Button type="submit" component={Link} href="/d/presence" fullWidth>
               Continue
             </Button>
           </Flex>
@@ -106,15 +113,20 @@ export default function Login() {
               {whatsappContacts.map(({ fullName, number }) => (
                 <Menu.Item
                   key={number}
-                  icon={<RiWhatsappLine size={20} />}
+                  icon={
+                    <RiWhatsappLine size={20} color={theme.colors.dark[3]} />
+                  }
                   rightSection={<RiArrowRightSLine size={20} />}
                   px="md"
                   component="a"
                   href={`https://wa.me/${number}`}
-                  target="_blank">
-                  <Flex direction="column">
-                    <Text fz="sm">{fullName}</Text>
-                    <Text fz="xs" fw={600} c="dark.3">
+                  target="_blank"
+                  sx={(theme) => ({ gap: theme.spacing.sm })}>
+                  <Flex direction="column" mr="md">
+                    <Text fz="sm" fw={600}>
+                      {fullName}
+                    </Text>
+                    <Text fz="xs" c="dark.3">
                       {number}
                     </Text>
                   </Flex>

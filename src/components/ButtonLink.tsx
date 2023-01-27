@@ -1,12 +1,10 @@
-import { Button, DefaultProps, Selectors } from "@mantine/core";
-import { forwardRef, ReactNode } from "react";
+import { Button, ButtonProps, DefaultProps, Selectors } from "@mantine/core";
+import { forwardRef } from "react";
 import useStyles from "@/components/styles/ButtonLink.styles";
 
 type ComponentStylesNames = Selectors<typeof useStyles>;
 
-interface Props extends DefaultProps<ComponentStylesNames> {
-  children: ReactNode;
-}
+type Props = DefaultProps<ComponentStylesNames> & ButtonProps;
 
 // Pakai ref karena error pas di render (Kurang tau kenapa)
 export const ButtonLink = forwardRef(function ButtonLink(
