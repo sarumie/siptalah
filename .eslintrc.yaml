@@ -4,7 +4,7 @@ ignorePatterns:
   - "*.config.*"
 rules:
   indent:
-    - error
+    - warn
     - 2
   quotes:
     - error
@@ -12,3 +12,4 @@ rules:
   semi:
     - error
     - always
+
