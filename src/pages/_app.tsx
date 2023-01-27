@@ -23,21 +23,21 @@ export default function App(props: AppProps) {
           fontFamily:
             "Inter, Plus Jakarta Sans, apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji",
           fontSizes: {
-            xs: 13.33,
-            sm: 14.63,
+            xs: 12,
+            sm: 14,
             md: 16,
-            lg: 19.2,
-            xl: 23.04
+            lg: 18,
+            xl: 20
           },
           headings: {
             fontFamily: "inherit",
             sizes: {
-              h1: { fontSize: 47.78 },
-              h2: { fontSize: 39.81 },
-              h3: { fontSize: 33.18 },
-              h4: { fontSize: 27.65 },
-              h5: { fontSize: 27.65 },
-              h6: { fontSize: 27.65 }
+              h1: { fontSize: 32.44 },
+              h2: { fontSize: 28.83 },
+              h3: { fontSize: 25.63 },
+              h4: { fontSize: 22.78 },
+              h5: { fontSize: 22.78 },
+              h6: { fontSize: 22.78 }
             }
           },
           colorScheme: "light",
