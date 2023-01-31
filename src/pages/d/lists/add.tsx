@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ButtonLink from "@/components/ButtonLink";
 import Dashboard from "@/layouts/Dashboard";
 import {
@@ -12,11 +11,7 @@ import {
   TextInput,
   Title
 } from "@mantine/core";
-import {
-  RiArrowDropDownFill,
-  RiArrowDropUpFill,
-  RiArrowLeftLine
-} from "react-icons/ri";
+import { RiArrowLeftLine } from "react-icons/ri";
 
 const useStylesName = createStyles((theme) => ({
   input: {
@@ -27,16 +22,7 @@ const useStylesName = createStyles((theme) => ({
 
 function AddStudentPage() {
   const maxValAbsent = 100;
-  const [absent, setAbsent] = useState(0);
   const { classes } = useStylesName();
-
-  const changeAbsentValue = (type?: "increment" | "decrement") => {
-    if (type == "increment")
-      return () =>
-        setAbsent((vBefore) => (vBefore < maxValAbsent ? vBefore : ++vBefore));
-    if (type == "decrement")
-      return () => setAbsent((vBefore) => (vBefore >= 1 ? --vBefore : vBefore));
-  };
 
   return (
     <Dashboard>
@@ -44,33 +30,13 @@ function AddStudentPage() {
         <Flex gap="md" direction="column" maw="30em">
           <Title order={3}>Tambah Data Siswa</Title>
           <Flex gap="md">
-            <Flex direction="column" gap="sm">
-              <Text fw={600} fz="sm">
-                No Absen
-              </Text>
-              <Flex gap="sm">
-                <Button
-                  compact
-                  mih="100%"
-                  onClick={changeAbsentValue("decrement")}>
-                  <RiArrowDropDownFill size={24} />
-                </Button>
-                <NumberInput
-                  name="absent"
-                  value={absent}
-                  hideControls
-                  min={1}
-                  max={maxValAbsent}
-                  onChange={(val) => setAbsent((valBefore) => val || valBefore)}
-                />
-                <Button compact mih="100%">
-                  <RiArrowDropUpFill
-                    size={24}
-                    onClick={changeAbsentValue("increment")}
-                  />
-                </Button>
-              </Flex>
-            </Flex>
+            <NumberInput
+              label="No. Absent"
+              name="absent"
+              hideControls
+              min={1}
+              max={maxValAbsent}
+            />
 
             <Select
               name="class"
@@ -82,6 +48,21 @@ function AddStudentPage() {
               data={["XII A", "XII B", "XII C"]}
             />
 
+            <Select
+              name="major"
+              placeholder="Jurusan"
+              label="Jurusan"
+              searchable
+              nothingFound="Jurusan tidak ditemukan"
+              classNames={classes}
+              data={[
+                "Rekayasa Perangkat Lunak",
+                "Desain Grafis",
+                "Produksi Grafika",
+                "Animasi",
+                "Multimedia"
+              ]}
+            />
             <Select
               name="major"
               placeholder="Jurusan"
