@@ -26,14 +26,16 @@ const useStylesName = createStyles((theme) => ({
 }));
 
 function AddStudentPage() {
+  const maxValAbsent = 100;
   const [absent, setAbsent] = useState(0);
   const { classes } = useStylesName();
 
-  const changeAbsentValue = (valueEvent?: "increment" | "decrement") => {
-    if (valueEvent == "increment")
-      return () => setAbsent((vBefore) => ++vBefore);
-    if (valueEvent == "decrement")
-      return () => setAbsent((vBefore) => --vBefore);
+  const changeAbsentValue = (type?: "increment" | "decrement") => {
+    if (type == "increment")
+      return () =>
+        setAbsent((vBefore) => (vBefore < maxValAbsent ? vBefore : ++vBefore));
+    if (type == "decrement")
+      return () => setAbsent((vBefore) => (vBefore >= 1 ? --vBefore : vBefore));
   };
 
   return (
@@ -58,7 +60,7 @@ function AddStudentPage() {
                   value={absent}
                   hideControls
                   min={1}
-                  max={100}
+                  max={maxValAbsent}
                   onChange={(val) => setAbsent((valBefore) => val || valBefore)}
                 />
                 <Button compact mih="100%">
