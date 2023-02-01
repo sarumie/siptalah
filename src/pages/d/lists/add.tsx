@@ -3,31 +3,20 @@ import Dashboard from "@/layouts/Dashboard";
 import {
   Button,
   Center,
-  createStyles,
   Flex,
   NumberInput,
   Select,
-  Text,
   TextInput,
   Title
 } from "@mantine/core";
 import { RiArrowLeftLine } from "react-icons/ri";
 
-const useStylesName = createStyles((theme) => ({
-  input: {
-    backgroundColor: theme.black,
-    color: theme.white
-  }
-}));
-
 function AddStudentPage() {
   const maxValAbsent = 100;
-  const { classes } = useStylesName();
-
   return (
     <Dashboard>
       <Center h="100vh">
-        <Flex gap="md" direction="column" maw="30em">
+        <Flex gap="md" direction="column" maw="400px">
           <Title order={3}>Tambah Data Siswa</Title>
           <Flex gap="md">
             <NumberInput
@@ -40,43 +29,26 @@ function AddStudentPage() {
 
             <Select
               name="class"
-              placeholder="Kelas"
               label="Kelas"
               searchable
               nothingFound="Kelas tidak ditemukan"
-              classNames={classes}
               data={["XII A", "XII B", "XII C"]}
             />
 
             <Select
               name="major"
-              placeholder="Jurusan"
               label="Jurusan"
               searchable
               nothingFound="Jurusan tidak ditemukan"
-              classNames={classes}
-              data={[
-                "Rekayasa Perangkat Lunak",
-                "Desain Grafis",
-                "Produksi Grafika",
-                "Animasi",
-                "Multimedia"
-              ]}
+              data={["RPL", "DG", "PD", "ANI", "DKV"]}
             />
+
             <Select
-              name="major"
-              placeholder="Jurusan"
-              label="Jurusan"
+              name="part"
+              label="Bagian"
               searchable
-              nothingFound="Jurusan tidak ditemukan"
-              classNames={classes}
-              data={[
-                "Rekayasa Perangkat Lunak",
-                "Desain Grafis",
-                "Produksi Grafika",
-                "Animasi",
-                "Multimedia"
-              ]}
+              nothingFound="Bagian kelas tidak ditemukan"
+              data={["A", "B", "C"]}
             />
           </Flex>
           <TextInput
