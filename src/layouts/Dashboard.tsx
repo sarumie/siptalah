@@ -67,7 +67,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                   <NavLink
                     key={label}
                     variant={
-                      pathURI == route.asPath.replace("/d/", "")
+                      route.asPath.split("/").includes(pathURI)
                         ? "filled"
                         : "light"
                     }
