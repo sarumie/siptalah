@@ -1,6 +1,3 @@
-/**
- * DEPRECATED
- */
 import { createStyles, ButtonProps } from "@mantine/core";
 
 export default createStyles((theme, params: ButtonProps) => ({
