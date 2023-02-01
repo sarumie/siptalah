@@ -23,7 +23,12 @@ import Link from "next/link";
 export default function Dashboard({ children }: React.ComponentProps<"div">) {
   // const [opened, setOpened] = useState(true);
   // const [active, setActive] = useState(true);
-  const imageProfile = useCallback(() => "https://waifu.now.sh/sfw/neko", []);
+  const imageProfile = useCallback(
+    () =>
+      // "https://waifu.now.sh/sfw/neko",
+      "",
+    []
+  );
 
   const theme = useMantineTheme();
   const route = useRouter();
@@ -93,7 +98,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
 
                   <Grid.Col span={8}>
                     <Flex direction="column">
-                      <Text size="sm" fw={600} truncate>
+                      <Text fw={600} truncate>
                         Gloria G. Johnson
                       </Text>
                       <Text color="dark.3" size="xs" truncate>
