@@ -1,5 +1,6 @@
+import styled from "@emotion/styled";
 import { Button, createStyles, Flex, Pagination, Table } from "@mantine/core";
-import { useCallback, useState } from "react";
+import { useState, useEffect } from "react";
 import { RiArrowRightLine } from "react-icons/ri";
 
 interface Student {
@@ -14,10 +15,6 @@ interface Student {
 const useStylesPagination = createStyles((theme) => ({
   item: {
     border: 0
-  },
-  td: {
-    paddingBlock: theme.spacing.md,
-    Background: theme.black
   }
 }));
 
@@ -25,7 +22,7 @@ function TableList() {
   const [students, setStudents] = useState<Student[]>();
   const { classes } = useStylesPagination();
 
-  const getStudents = async (count: number = 8) => {
+  const getStudents = async (count: number = 9) => {
     return await fetch(
       `https://api.mockaroo.com/api/6fa63520?count=${count}&key=ab26b160`
     )
@@ -34,33 +31,36 @@ function TableList() {
       .catch((err) => console.log("Data siswa tidak bisa diambil", err));
   };
 
-  const rows = useCallback(
-    () =>
-      students?.map(({ id, ...others }) => (
-        <tr key={id}>
-          {Object.values(others).map((val) => (
-            <td key={val} className={classes.td}>
-              {val}
-            </td>
-          ))}
-        </tr>
-      )),
-    [students, classes.td]
-  );
+  useEffect(() => {
+    getStudents();
+
+    // return () => {
+    //   second
+    // }
+  }, []);
 
   return (
     <Flex direction="column" gap="sm">
-      <Table>
+      <Table verticalSpacing="md">
         <thead>
           <tr>
             <th>No. Absen</th>
             <th>Nama</th>
             <th>Kelas</th>
             <th>NIS</th>
+            <th>Password</th>
             <th>No. Telepon</th>
           </tr>
         </thead>
-        <tbody>{rows()}</tbody>
+        <tbody>
+          {students?.map(({ id, ...others }) => (
+            <tr key={id}>
+              {Object.values(others).map((val) => (
+                <td key={val}>{val}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
       </Table>
       <Flex justify="space-between">
         <Pagination total={10} classNames={{ item: classes.item }} />
