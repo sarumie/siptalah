@@ -14,3 +14,22 @@ interface Student {
   NIS: number;
   phone: number;
 }
+
+interface Presence {
+  id: string;
+  absent: string;
+  fullName: string;
+  NIS: string;
+  class: string;
+  status: string;
+}
+
+interface PresenceHistory {
+  id: string;
+  date: string;
+  timeRange: string;
+  attend: string;
+  late: string;
+  permit: string;
+  alpha: string;
+}
