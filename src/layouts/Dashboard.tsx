@@ -4,7 +4,6 @@ import {
   AppShell,
   Navbar,
   Text,
-  useMantineTheme,
   Box,
   Flex,
   Avatar,
@@ -71,6 +70,8 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     }
   ];
 
+  console.log("rerender navbar");
+
   return (
     <AppShell
       navbar={
@@ -101,6 +102,13 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                     icon={Icon}
                   />
                 ))}
+                <NavLink label="Nested parent link">
+                  <NavLink
+                    label="Hellowo"
+                    icon={<RiGroupFill size={16} />}
+                    variant="filled"
+                  />
+                </NavLink>
               </Flex>
             </Flex>
 

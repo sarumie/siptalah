@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Tabs, Title } from "@mantine/core";
+import { Button, Flex, Input, Tabs, TextInput, Title } from "@mantine/core";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiAddFill, RiSearchLine } from "react-icons/ri";
@@ -49,7 +49,7 @@ function ListStudent() {
                   Reset Info Perangkat
                 </Button>
               </Flex>
-              <Input icon={<RiSearchLine />} placeholder="Cari siswa..." />
+              <TextInput icon={<RiSearchLine />} placeholder="Cari siswa..." />
             </Flex>
             <Table
               data={students}

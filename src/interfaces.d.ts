@@ -26,6 +26,7 @@ interface Presence {
 
 interface PresenceHistory {
   id: string;
+  absent: string;
   date: string;
   timeRange: string;
   attend: string;

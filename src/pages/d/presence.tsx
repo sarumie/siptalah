@@ -1,22 +1,46 @@
+import HistoryPresence from "@/components/pages/HistoryPresence";
+import TableList from "@/components/TableList";
 import Dashboard from "@/layouts/Dashboard";
 import {
-  Box,
+  Button,
   Center,
   createStyles,
   Flex,
   Space,
   Tabs,
   Text,
+  TextInput,
   Title
 } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { useState, useEffect } from "react";
+import { RiPlayFill, RiSearchLine, RiStopFill } from "react-icons/ri";
+
+const totalStudent = 2013;
 
 const useStyles = createStyles((theme) => ({
   timeBox: {
     borderRadius: theme.radius.sm
+  },
+  stopBtn: {
+    backgroundColor: theme.colors.red[6],
+    color: theme.colors.red[1],
+    boxShadow: `2px 4px 16px ${theme.colors.red[6]}33`,
+    transitionDuration: "150ms",
+    ":hover": {
+      boxShadow: `2px 4px 16px ${theme.colors.red[6]}66`
+    }
+  },
+  startBtn: {
+    backgroundColor: theme.colors.blue[6],
+    color: theme.colors.blue[1],
+    boxShadow: `2px 4px 16px ${theme.colors.blue[6]}33`,
+    transitionDuration: "150ms",
+    ":hover": {
+      boxShadow: `2px 4px 16px ${theme.colors.blue[6]}66`
+    }
   }
 }));
-
-const totalStudent = 2013;
 
 const StatisticPresences = () => {
   const presenceStatistic = [
@@ -71,8 +95,38 @@ const StatisticPresences = () => {
   );
 };
 
-export default function Presensi() {
+export default function ListPresence() {
+  const [buttonState, toggleButtonState] = useToggle<{
+    title: string;
+    class: "stopBtn" | "startBtn";
+    icon: JSX.Element;
+  }>([
+    {
+      title: "Tutup presensi",
+      class: "stopBtn",
+      icon: <RiStopFill />
+    },
+    {
+      title: "Buka presensi",
+      class: "startBtn",
+      icon: <RiPlayFill />
+    }
+  ]);
+  const [presences, setPresences] = useState<Presence[]>([]);
   const { classes } = useStyles();
+
+  const getPresences = async (count: number = 6) => {
+    return await fetch(
+      `https://api.mockaroo.com/api/e5ee2dc0?count=${count}&key=ab26b160`
+    )
+      .then((resolve) => resolve.json())
+      .then((data) => setPresences(() => data))
+      .catch((err) => console.log("Data siswa tidak bisa diambil", err));
+  };
+
+  useEffect(() => {
+    getPresences();
+  }, []);
 
   return (
     <Dashboard>
@@ -99,10 +153,34 @@ export default function Presensi() {
             <Flex gap="md" wrap="wrap">
               <StatisticPresences />
             </Flex>
+            <Space h="md" />
+            <Flex direction="column" gap="md">
+              <Flex justify="space-between">
+                <Flex gap="sm">
+                  <Button
+                    leftIcon={buttonState.icon}
+                    variant="white"
+                    onClick={() => toggleButtonState()}
+                    className={classes[buttonState.class]}>
+                    {buttonState.title}
+                  </Button>
+                </Flex>
+                <TextInput
+                  icon={<RiSearchLine />}
+                  placeholder="Cari rekaman presensi..."
+                />
+              </Flex>
+              <TableList
+                data={presences}
+                unique="id"
+                ignore="id"
+                ths={["Absen", "Nama", "NIS", "Kelas", "Status"]}
+              />
+            </Flex>
           </Tabs.Panel>
 
-          <Tabs.Panel value="history" pt="xs">
-            History tab content
+          <Tabs.Panel value="history" pt="md">
+            <HistoryPresence />
           </Tabs.Panel>
         </Tabs>
       </Flex>

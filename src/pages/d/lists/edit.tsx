@@ -23,6 +23,7 @@ function EditStudent() {
               label="No. Absent"
               name="absent"
               hideControls
+              defaultValue={12}
               min={1}
               max={maxValAbsent}
             />
@@ -32,7 +33,8 @@ function EditStudent() {
               label="Kelas"
               searchable
               nothingFound="Kelas tidak ditemukan"
-              data={["XII A", "XII B", "XII C"]}
+              defaultValue="XII"
+              data={["XII", "XI", "X"]}
             />
 
             <Select
@@ -47,6 +49,7 @@ function EditStudent() {
               name="part"
               label="Bagian"
               searchable
+              defaultValue="A"
               nothingFound="Bagian kelas tidak ditemukan"
               data={["A", "B", "C"]}
             />
@@ -55,6 +58,7 @@ function EditStudent() {
             name="fullName"
             label="Nama"
             placeholder="Nama siswa"
+            defaultValue="Abdul Kyouka Narami"
             autoComplete="none"
           />
           <NumberInput

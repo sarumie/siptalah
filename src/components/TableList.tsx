@@ -3,8 +3,12 @@ import { RiArrowRightLine } from "react-icons/ri";
 
 interface Props<T> {
   data: T[];
+  /**
+   * aliases for id
+   */
   unique: keyof T;
-  ths?: NonEmptyArray<string>;
+  ignore?: keyof T;
+  ths: NonEmptyArray<string>;
 }
 
 const useStyles = createStyles((theme) => ({
@@ -19,26 +23,27 @@ const useStyles = createStyles((theme) => ({
 function TableList<T extends { [key: string]: any }>({
   data,
   unique,
-  ths
+  ths,
+  ignore
 }: Props<T>) {
   const { classes } = useStyles();
 
   return (
     <Flex direction="column" gap="sm">
-      <Table verticalSpacing="md" highlightOnHover>
+      <Table verticalSpacing="md" highlightOnHover horizontalSpacing="md">
         <thead className={classes.thead}>
           <tr>
-            {ths
-              ? ths.map((value) => <th key={value}>{value}</th>)
-              : Object.keys(data[0]).map((key) => <th key={key}>{key}</th>)}
+            {ths.map((value) => (
+              <th key={value}>{value}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {data?.map((field) => (
-            <tr key={field[unique]}>
-              {Object.values(field).map((val) => (
-                <td key={val}>{val}</td>
-              ))}
+          {data?.map((dataInArr) => (
+            <tr key={dataInArr[unique]}>
+              {Object.entries(dataInArr).map((val) =>
+                ignore != val[0] ? <td key={val[1]}>{val[1]}</td> : null
+              )}
             </tr>
           ))}
         </tbody>
