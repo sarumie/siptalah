@@ -2,6 +2,7 @@ import "@fontsource/inter/variable.css";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
+import { CLIENT_RENEG_LIMIT } from "tls";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -9,7 +10,7 @@ export default function App(props: AppProps) {
   return (
     <>
       <Head>
-        <title>Hellowo</title>
+        <title>SPPS - Development</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -70,6 +71,21 @@ export default function App(props: AppProps) {
                 //   fontWeight: 600
                 // }
               })
+            },
+            Button: {
+              // @ts-ignore
+              styles(theme, params) {
+                if (params.variant == "outline")
+                  return {
+                    root: {
+                      ":hover": {
+                        backgroundColor: theme.colors.gray[2]
+                      }
+                    }
+                  };
+
+                return {};
+              }
             }
           }
         }}>
@@ -78,4 +94,3 @@ export default function App(props: AppProps) {
     </>
   );
 }
-
