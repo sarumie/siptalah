@@ -1,61 +1,42 @@
-import styled from "@emotion/styled";
 import { Button, createStyles, Flex, Pagination, Table } from "@mantine/core";
-import { useState, useEffect } from "react";
 import { RiArrowRightLine } from "react-icons/ri";
 
-interface Student {
-  id: string;
-  absent: number;
-  full_name: string;
-  class: string;
-  NIS: number;
-  phone: number;
+interface Props<T> {
+  data: T[];
+  unique: keyof T;
+  ths?: NonEmptyArray<string>;
 }
 
-const useStylesPagination = createStyles((theme) => ({
+const useStyles = createStyles((theme) => ({
   item: {
     border: 0
+  },
+  thead: {
+    backgroundColor: theme.colors.gray[1]
   }
 }));
 
-function TableList() {
-  const [students, setStudents] = useState<Student[]>();
-  const { classes } = useStylesPagination();
-
-  const getStudents = async (count: number = 9) => {
-    return await fetch(
-      `https://api.mockaroo.com/api/6fa63520?count=${count}&key=ab26b160`
-    )
-      .then((resolve) => resolve.json())
-      .then((data: Student[]) => setStudents(() => data))
-      .catch((err) => console.log("Data siswa tidak bisa diambil", err));
-  };
-
-  useEffect(() => {
-    getStudents();
-
-    // return () => {
-    //   second
-    // }
-  }, []);
+function TableList<T extends { [key: string]: any }>({
+  data,
+  unique,
+  ths
+}: Props<T>) {
+  const { classes } = useStyles();
 
   return (
     <Flex direction="column" gap="sm">
-      <Table verticalSpacing="md">
-        <thead>
+      <Table verticalSpacing="md" highlightOnHover>
+        <thead className={classes.thead}>
           <tr>
-            <th>No. Absen</th>
-            <th>Nama</th>
-            <th>Kelas</th>
-            <th>NIS</th>
-            <th>Password</th>
-            <th>No. Telepon</th>
+            {ths
+              ? ths.map((value) => <th key={value}>{value}</th>)
+              : Object.keys(data[0]).map((key) => <th key={key}>{key}</th>)}
           </tr>
         </thead>
         <tbody>
-          {students?.map(({ id, ...others }) => (
-            <tr key={id}>
-              {Object.values(others).map((val) => (
+          {data?.map((field) => (
+            <tr key={field[unique]}>
+              {Object.values(field).map((val) => (
                 <td key={val}>{val}</td>
               ))}
             </tr>

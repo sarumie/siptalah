@@ -10,19 +10,36 @@ import {
   Avatar,
   Title,
   NavLink,
-  Grid
+  Grid,
+  createStyles
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import {
   RiArrowDropRightLine,
   RiDashboardFill,
+  RiGroupFill,
   RiUser3Fill
 } from "react-icons/ri";
 import Link from "next/link";
 
+interface NavLinkProp {
+  label: string;
+  Icon: JSX.Element;
+  href: `${"/d/"}${string}`;
+  pathURI: string;
+}
+
+const useStyles = createStyles((theme) => ({
+  title: { borderBottom: `1px solid ${theme.colors.gray[3]}` },
+  box: {
+    borderTop: "1px solid",
+    borderColor: theme.colors.gray[3]
+  }
+}));
+
 export default function Dashboard({ children }: React.ComponentProps<"div">) {
   // const [opened, setOpened] = useState(true);
-  // const [active, setActive] = useState(true);
+  // const [active, setActive]b   = useState(true);
   const imageProfile = useCallback(
     () =>
       // "https://waifu.now.sh/sfw/neko",
@@ -30,10 +47,10 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     []
   );
 
-  const theme = useMantineTheme();
+  const { classes } = useStyles();
   const route = useRouter();
 
-  const navLinkProp = [
+  const navLinkProp: NavLinkProp[] = [
     {
       label: "Dashboard",
       Icon: <RiDashboardFill size={16} />,
@@ -41,9 +58,15 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
       pathURI: "presence"
     },
     {
-      label: "Daftar pengurus dan siswa",
+      label: "Daftar Pengurus dan Siswa",
       Icon: <RiUser3Fill size={16} />,
       href: "/d/lists",
+      pathURI: "lists"
+    },
+    {
+      label: "Daftar Kelas dan Jurusan",
+      Icon: <RiGroupFill size={16} />,
+      href: "/d/",
       pathURI: "lists"
     }
   ];
@@ -52,18 +75,14 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     <AppShell
       navbar={
         <Navbar
-          // p="xs"
+          // p="xs"-0`
           hiddenBreakpoint="md"
           // hidden={opened}
           hidden={true}
           width={{ sm: 203, lg: 303 }}>
           <Flex direction="column" h="100%" justify="space-between">
             <Flex w="inherit" direction="inherit" gap="md">
-              <Title
-                order={3}
-                py="xs"
-                px="md"
-                sx={{ borderBottom: `1px solid ${theme.colors.gray[3]}` }}>
+              <Title order={3} py="xs" px="md" className={classes.title}>
                 SPPS
               </Title>
               {/* Navigations */}
@@ -85,11 +104,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
               </Flex>
             </Flex>
 
-            <Box
-              sx={{
-                borderTop: "1px solid",
-                borderColor: theme.colors.gray[3]
-              }}>
+            <Box className={classes.box}>
               <ProfileMenuButton py="md" px="md">
                 <Grid align="center">
                   <Grid.Col span="auto">

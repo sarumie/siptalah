@@ -11,13 +11,13 @@ import {
 } from "@mantine/core";
 import { RiArrowLeftLine } from "react-icons/ri";
 
-function AddStudentPage() {
+function EditStudent() {
   const maxValAbsent = 100;
   return (
     <Dashboard>
       <Center h="100vh">
         <Flex gap="md" direction="column" maw="400px">
-          <Title order={1}>Tambah Data Siswa</Title>
+          <Title order={1}>Edit Data Siswa</Title>
           <Flex gap="md">
             <NumberInput
               label="No. Absent"
@@ -63,7 +63,7 @@ function AddStudentPage() {
             placeholder="NIS siswa"
             hideControls
           />
-          <Button>Tambah</Button>
+          <Button>Ubah</Button>
           <ButtonLink leftIcon={<RiArrowLeftLine />}>
             Kembali ke halaman daftar siswa
           </ButtonLink>
@@ -73,4 +73,4 @@ function AddStudentPage() {
   );
 }
 
-export default AddStudentPage;
+export default EditStudent;

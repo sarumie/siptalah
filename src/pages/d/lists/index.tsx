@@ -1,13 +1,29 @@
-import Table from "@/components/TableList";
-import Dashboard from "@/layouts/Dashboard";
 import { Button, Flex, Input, Tabs, Title } from "@mantine/core";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiAddFill, RiSearchLine } from "react-icons/ri";
+import Table from "@/components/TableList";
+import Dashboard from "@/layouts/Dashboard";
 
 function ListStudent() {
+  const [students, setStudents] = useState<Student[]>([]);
+
+  const getStudents = async (count: number = 9) => {
+    return await fetch(
+      `https://api.mockaroo.com/api/6fa63520?count=${count}&key=ab26b160`
+    )
+      .then((resolve) => resolve.json())
+      .then((data) => setStudents(() => data))
+      .catch((err) => console.log("Data siswa tidak bisa diambil", err));
+  };
+
+  useEffect(() => {
+    getStudents();
+  }, []);
+
   return (
     <Dashboard>
-      <Title order={3}>Daftar Siswa</Title>
+      <Title order={1}>Daftar Siswa</Title>
       <Tabs defaultValue="student" mt="md">
         <Tabs.List>
           <Tabs.Tab value="responsible">Pengurus</Tabs.Tab>
@@ -26,7 +42,7 @@ function ListStudent() {
                 <Button variant="outline" disabled>
                   Hapus
                 </Button>
-                <Button variant="outline" disabled>
+                <Button variant="outline" component={Link} href="/d/lists/edit">
                   Edit
                 </Button>
                 <Button variant="outline" disabled>
@@ -35,9 +51,21 @@ function ListStudent() {
               </Flex>
               <Input icon={<RiSearchLine />} placeholder="Cari siswa..." />
             </Flex>
-            <Table />
+            <Table
+              data={students}
+              unique="NIS"
+              ths={[
+                "No. Absen",
+                "Nama Lengkap",
+                "Kelas",
+                "NIS",
+                "Kata Sandi",
+                "No. Telpon"
+              ]}
+            />
           </Flex>
         </Tabs.Panel>
+
         <Tabs.Panel value="responsible" mt="md">
           Pengurus
         </Tabs.Panel>
