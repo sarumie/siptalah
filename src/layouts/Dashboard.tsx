@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ProfileMenuButton from "@/components/ProfileMenuButton";
 import {
   AppShell,
@@ -20,6 +20,7 @@ import {
   RiUser3Fill
 } from "react-icons/ri";
 import Link from "next/link";
+import { useToggle } from "@mantine/hooks";
 
 interface NavLinkProp {
   label: string;
@@ -37,8 +38,8 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Dashboard({ children }: React.ComponentProps<"div">) {
-  // const [opened, setOpened] = useState(true);
-  // const [active, setActive]b   = useState(true);
+  const [opened, setOpened] = useToggle();
+  // const [active, setActive] = useState(true);
   const imageProfile = useCallback(
     () =>
       // "https://waifu.now.sh/sfw/neko",
@@ -70,6 +71,12 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     }
   ];
 
+  useEffect(() => {
+    return () => {
+      console.log("unmounted");
+    };
+  });
+
   return (
     <AppShell
       navbar={
@@ -100,14 +107,26 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                     icon={Icon}
                   />
                 ))}
-                {/* <NavLink
-                  label="Test nested parent link">
+                <NavLink
+                  label="Test nested parent link"
+                  opened={opened}
+                  onClick={() => setOpened()}>
                   <NavLink
                     label="Hellowo"
                     icon={<RiGroupFill size={16} />}
                     variant="filled"
                   />
-                </NavLink> */}
+                  <NavLink
+                    label="Hellowo"
+                    icon={<RiGroupFill size={16} />}
+                    variant="filled"
+                  />
+                  <NavLink
+                    label="Hellowo"
+                    icon={<RiGroupFill size={16} />}
+                    variant="filled"
+                  />
+                </NavLink>
               </Flex>
             </Flex>
 

@@ -42,8 +42,7 @@ const useStyles = createStyles((theme) => ({
   },
   presenceMain: {
     backgroundColor: theme.black,
-    color: theme.white,
-    border: `1px solid ${theme.colors.dark[0]}`
+    color: theme.white
   }
 }));
 
@@ -83,9 +82,10 @@ const StatisticPresences = () => {
           align="flex-end"
           px="md"
           py="sm"
-          className={index > 0 ? classes.presenceMain : ""}
+          className={index == 0 ? classes.presenceMain : ""}
           sx={(theme) => ({
-            borderRadius: theme.defaultRadius
+            borderRadius: theme.defaultRadius,
+            border: `1px solid ${theme.colors.dark[0]}`
           })}>
           <Flex direction="column">
             <Text fw={600}>{val.title}</Text>
@@ -132,60 +132,58 @@ export default function ListPresence() {
   }, []);
 
   return (
-    <Dashboard>
-      <Flex direction="column" gap="md">
-        <Flex direction="column">
-          <Title order={1}>Presensi Hari Ini</Title>
-          <Flex gap="sm" align="center">
-            {/* Jika lebih dari jam 7 akan berwarna merah */}
-            <Center px="sm" py="xs" bg="blue.1" className={classes.timeBox}>
-              <Text fw="bold" c="blue.9">
-                06.02
-              </Text>
-            </Center>
-            <Text fw={600}>Jum&#39;at, 13 Januari 2023</Text>
-          </Flex>
+    <Flex direction="column" gap="md">
+      <Flex direction="column">
+        <Title order={1}>Presensi Hari Ini</Title>
+        <Flex gap="sm" align="center">
+          {/* Jika lebih dari jam 7 akan berwarna merah */}
+          <Center px="sm" py="xs" bg="blue.1" className={classes.timeBox}>
+            <Text fw="bold" c="blue.9">
+              06.02
+            </Text>
+          </Center>
+          <Text fw={600}>Jum&#39;at, 13 Januari 2023</Text>
         </Flex>
-        <Tabs defaultValue="presence">
-          <Tabs.List>
-            <Tabs.Tab value="presence">Presensi</Tabs.Tab>
-            <Tabs.Tab value="history">Riwayat Kegiatan Presensi</Tabs.Tab>
-          </Tabs.List>
+      </Flex>
+      <Tabs defaultValue="presence">
+        <Tabs.List>
+          <Tabs.Tab value="presence">Presensi</Tabs.Tab>
+          <Tabs.Tab value="history">Riwayat Kegiatan Presensi</Tabs.Tab>
+        </Tabs.List>
 
-          <Tabs.Panel value="presence" pt="md">
-            <Flex gap="md" wrap="wrap">
-              <StatisticPresences />
-            </Flex>
-            <Space h="md" />
-            <Flex direction="column" gap="md">
-              <Flex justify="space-between">
-                <Flex gap="sm">
-                  <Button
-                    leftIcon={buttonState.icon}
-                    variant="white"
-                    onClick={() => toggleButtonState()}
-                    className={classes[buttonState.class]}>
-                    {buttonState.title}
-                  </Button>
-                </Flex>
-                <TextInput
-                  icon={<RiSearchLine />}
-                  placeholder="Cari rekaman presensi..."
-                />
+        <Tabs.Panel value="presence" pt="md">
+          <Flex gap="md" wrap="wrap">
+            <StatisticPresences />
+          </Flex>
+          <Space h="md" />
+          <Flex direction="column" gap="md">
+            <Flex justify="space-between">
+              <Flex gap="sm">
+                <Button
+                  leftIcon={buttonState.icon}
+                  variant="white"
+                  onClick={() => toggleButtonState()}
+                  className={classes[buttonState.class]}>
+                  {buttonState.title}
+                </Button>
               </Flex>
-              <TableList
-                data={presences}
-                ignore="id"
-                ths={["Absen", "Nama", "NIS", "Kelas", "Status"]}
+              <TextInput
+                icon={<RiSearchLine />}
+                placeholder="Cari rekaman presensi..."
               />
             </Flex>
-          </Tabs.Panel>
+            <TableList
+              data={presences}
+              ignore="id"
+              ths={["Absen", "Nama", "NIS", "Kelas", "Status"]}
+            />
+          </Flex>
+        </Tabs.Panel>
 
-          <Tabs.Panel value="history" pt="md">
-            <HistoryPresence />
-          </Tabs.Panel>
-        </Tabs>
-      </Flex>
-    </Dashboard>
+        <Tabs.Panel value="history" pt="md">
+          <HistoryPresence />
+        </Tabs.Panel>
+      </Tabs>
+    </Flex>
   );
 }

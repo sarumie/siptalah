@@ -3,8 +3,11 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import theme from "@/theme";
 import { MantineProvider } from "@mantine/core";
+import Dashboard from "@/layouts/Dashboard";
+import { useRouter } from "next/router";
 
 export default function App(props: AppProps) {
+  const route = useRouter();
   const { Component, pageProps } = props;
 
   return (
@@ -18,7 +21,13 @@ export default function App(props: AppProps) {
       </Head>
 
       <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
-        <Component {...pageProps} />
+        {route.asPath.split("/").includes("d") ? (
+          <Dashboard>
+            <Component {...pageProps} />
+          </Dashboard>
+        ) : (
+          <Component {...pageProps} />
+        )}
       </MantineProvider>
     </>
   );

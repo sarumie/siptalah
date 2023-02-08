@@ -36,7 +36,7 @@ function ListStudent() {
   }, []);
 
   return (
-    <Dashboard>
+    <>
       <Title order={1}>Daftar {title}</Title>
       <Tabs defaultValue="student" mt="md" onTabChange={handleTabChange}>
         <Tabs.List>
@@ -111,7 +111,7 @@ function ListStudent() {
           </Flex>
         </Tabs.Panel>
       </Tabs>
-    </Dashboard>
+    </>
   );
 }
 
