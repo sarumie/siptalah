@@ -66,11 +66,9 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
       label: "Daftar Kelas dan Jurusan",
       Icon: <RiGroupFill size={16} />,
       href: "/d/",
-      pathURI: "lists"
+      pathURI: "kelas"
     }
   ];
-
-  console.log("rerender navbar");
 
   return (
     <AppShell
@@ -102,13 +100,14 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                     icon={Icon}
                   />
                 ))}
-                <NavLink label="Nested parent link">
+                {/* <NavLink
+                  label="Test nested parent link">
                   <NavLink
                     label="Hellowo"
                     icon={<RiGroupFill size={16} />}
                     variant="filled"
                   />
-                </NavLink>
+                </NavLink> */}
               </Flex>
             </Flex>
 
