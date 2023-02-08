@@ -6,7 +6,6 @@ interface Props<T> {
   /**
    * aliases for id
    */
-  unique: keyof T;
   ignore?: keyof T;
   ths: NonEmptyArray<string>;
 }
@@ -22,7 +21,6 @@ const useStyles = createStyles((theme) => ({
 
 function TableList<T extends { [key: string]: any }>({
   data,
-  unique,
   ths,
   ignore
 }: Props<T>) {
@@ -30,7 +28,7 @@ function TableList<T extends { [key: string]: any }>({
 
   return (
     <Flex direction="column" gap="sm">
-      <Table verticalSpacing="md" highlightOnHover horizontalSpacing="md">
+      <Table verticalSpacing="md" horizontalSpacing="md" highlightOnHover>
         <thead className={classes.thead}>
           <tr>
             {ths.map((value) => (
@@ -40,10 +38,11 @@ function TableList<T extends { [key: string]: any }>({
         </thead>
         <tbody>
           {data?.map((dataInArr) => (
-            <tr key={dataInArr[unique]}>
-              {Object.entries(dataInArr).map((val) =>
-                ignore != val[0] ? <td key={val[1]}>{val[1]}</td> : null
-              )}
+            <tr key={dataInArr["id"]}>
+              {Object.entries(dataInArr).map((val) => {
+                if (val[0] == ignore || val[0] == "id") return;
+                return <td key={val[0]}>{val[1]}</td>;
+              })}
             </tr>
           ))}
         </tbody>
