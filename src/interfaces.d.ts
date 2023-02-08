@@ -14,6 +14,13 @@ interface Student {
   NIS: number;
   phone: number;
 }
+interface Manager {
+  id: string;
+  NIP: string;
+  access: string;
+  role: string;
+  phone: string;
+}
 
 interface Presence {
   id: string;
