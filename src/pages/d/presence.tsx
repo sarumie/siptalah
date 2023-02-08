@@ -39,10 +39,17 @@ const useStyles = createStyles((theme) => ({
     ":hover": {
       boxShadow: `2px 4px 16px ${theme.colors.blue[6]}66`
     }
+  },
+  presenceMain: {
+    backgroundColor: theme.black,
+    color: theme.white,
+    border: `1px solid ${theme.colors.dark[0]}`
   }
 }));
 
 const StatisticPresences = () => {
+  const { classes } = useStyles();
+
   const presenceStatistic = [
     {
       title: "Presensi terisi",
@@ -74,13 +81,11 @@ const StatisticPresences = () => {
           maw="fit-content"
           gap="xs"
           align="flex-end"
-          bg={index == 0 ? "black" : ""}
-          c={index == 0 ? "white" : ""}
           px="md"
           py="sm"
+          className={index > 0 ? classes.presenceMain : ""}
           sx={(theme) => ({
-            borderRadius: theme.defaultRadius,
-            border: index > 0 ? `1px solid ${theme.colors.dark[0]}` : ""
+            borderRadius: theme.defaultRadius
           })}>
           <Flex direction="column">
             <Text fw={600}>{val.title}</Text>
