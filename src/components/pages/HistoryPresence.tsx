@@ -30,9 +30,7 @@ function HistoryPresence() {
   const { classes } = useStyles();
 
   const getHistory = async (count: number = 9) => {
-    return await fetch(
-      `https://api.mockaroo.com/api/669050b0?count=${count}&key=ab26b160`
-    )
+    return await fetch("https://spps.free.mockoapp.net/presences")
       .then((resolve) => resolve.json())
       .then((data) => setHistory(() => data))
       .catch((err) => console.log("Data siswa tidak bisa diambil", err));
@@ -60,11 +58,11 @@ function HistoryPresence() {
       </Flex>
       <TableList
         data={history}
-        unique="id"
         ignore="id"
         ths={[
           "Tanggal",
-          "Buka - Tutup",
+          "Waktu Buka",
+          "Waktu Tutup",
           "Hadir",
           "Terlambat",
           "Izin/Sakit",

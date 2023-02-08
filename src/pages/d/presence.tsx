@@ -115,10 +115,8 @@ export default function ListPresence() {
   const [presences, setPresences] = useState<Presence[]>([]);
   const { classes } = useStyles();
 
-  const getPresences = async (count: number = 6) => {
-    return await fetch(
-      `https://api.mockaroo.com/api/e5ee2dc0?count=${count}&key=ab26b160`
-    )
+  const getPresences = async () => {
+    return await fetch("https://spps.free.mockoapp.net/presences/today")
       .then((resolve) => resolve.json())
       .then((data) => setPresences(() => data))
       .catch((err) => console.log("Data siswa tidak bisa diambil", err));
@@ -172,7 +170,6 @@ export default function ListPresence() {
               </Flex>
               <TableList
                 data={presences}
-                unique="id"
                 ignore="id"
                 ths={["Absen", "Nama", "NIS", "Kelas", "Status"]}
               />
