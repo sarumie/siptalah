@@ -21,9 +21,6 @@ interface Props<T> {
 }
 
 const useStyles = createStyles((theme) => ({
-  item: {
-    border: 0
-  },
   thead: {
     backgroundColor: theme.colors.gray[1]
   }
@@ -40,6 +37,7 @@ function TableList<T extends { [key: string]: any }>({
   return (
     <Flex direction="column" gap="sm">
       <Table
+        withBorder
         verticalSpacing="md"
         horizontalSpacing="md"
         highlightOnHover={emptyDisplay}
@@ -77,7 +75,7 @@ function TableList<T extends { [key: string]: any }>({
                     />
                   </AspectRatio>
                   <Center mt="md">
-                    <Text fw={600} c="dark.3">
+                    <Text fw={600} fz="sm" c="dark.3">
                       Tidak ada informasi yang ditampilkan
                     </Text>
                   </Center>
@@ -88,7 +86,7 @@ function TableList<T extends { [key: string]: any }>({
         </tbody>
       </Table>
       <Flex justify="space-between">
-        <Pagination total={10} classNames={{ item: classes.item }} />
+        <Pagination total={10} />
         <Button variant="outline" rightIcon={<RiArrowRightLine />}>
           Lompat ke halaman...
         </Button>
