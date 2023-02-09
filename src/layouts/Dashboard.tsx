@@ -87,7 +87,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
           width={{ sm: 203, lg: 303 }}>
           <Flex direction="column" h="100%" justify="space-between">
             <Flex w="inherit" direction="inherit" gap="md">
-              <Title order={3} py="xs" px="md" className={classes.title}>
+              <Title order={1} py="xs" px="md" className={classes.title}>
                 SPPS
               </Title>
               {/* Navigations */}
