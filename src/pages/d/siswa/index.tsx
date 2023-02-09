@@ -1,7 +1,12 @@
 import { Button, Flex, TextInput, Title } from "@mantine/core";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { RiAddFill, RiSearchLine } from "react-icons/ri";
+import {
+  RiAddFill,
+  RiDeleteBinFill,
+  RiPencilFill,
+  RiSearchLine
+} from "react-icons/ri";
 import TableList from "@/components/TableList";
 
 function Index() {
@@ -27,14 +32,18 @@ function Index() {
             <Button
               leftIcon={<RiAddFill />}
               component={Link}
-              href="/d/lists/add">
+              href="/d/siswa/tambah">
               Tambah Siswa
             </Button>
-            <Button variant="outline" disabled>
-              Hapus
-            </Button>
-            <Button variant="outline" component={Link} href="/d/lists/edit">
+            <Button
+              variant="outline"
+              leftIcon={<RiPencilFill />}
+              component={Link}
+              href="/d/siswa/edit">
               Edit
+            </Button>
+            <Button variant="outline" leftIcon={<RiDeleteBinFill />}>
+              Hapus
             </Button>
           </Flex>
           <TextInput icon={<RiSearchLine />} placeholder="Cari siswa..." />

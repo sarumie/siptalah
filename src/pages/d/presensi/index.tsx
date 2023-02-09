@@ -123,7 +123,7 @@ function PresensiIndex() {
     return await fetch("https://spps.free.mockoapp.net/presences/today")
       .then((resolve) => resolve.json())
       .then((data) => setPresences(() => data))
-      .catch((err) => console.log("Data siswa tidak bisa diambil", err));
+      .catch((err) => console.log("Data presensi tidak bisa diambil", err));
   };
 
   useEffect(() => {

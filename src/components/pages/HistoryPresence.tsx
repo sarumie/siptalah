@@ -34,7 +34,9 @@ function HistoryPresence() {
     return await fetch("https://spps.free.mockoapp.net/presences")
       .then((resolve) => resolve.json())
       .then((data) => setHistory(() => data))
-      .catch((err) => console.log("Data siswa tidak bisa diambil", err));
+      .catch((err) =>
+        console.log("Data riwayat presensi tidak bisa diambil", err)
+      );
   };
 
   useEffect(() => {
@@ -52,7 +54,7 @@ function HistoryPresence() {
             variant="white"
             leftIcon={<RiDeleteBin2Fill />}
             className={classes.btnDelete}>
-            Hapus semua riwayat
+            Hapus
           </Button>
         </Flex>
         <TextInput icon={<RiSearchLine />} placeholder="Cari histori..." />

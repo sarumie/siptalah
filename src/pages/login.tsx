@@ -87,7 +87,7 @@ export default function Login() {
               hideControls
               {...form.getInputProps("nip")}
             />
-            <Button type="submit" component={Link} href="/d/presence" fullWidth>
+            <Button type="submit" component={Link} href="/d/presensi" fullWidth>
               Continue
             </Button>
           </Flex>
