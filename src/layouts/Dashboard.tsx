@@ -41,9 +41,8 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
   const [opened, setOpened] = useToggle();
   // const [active, setActive] = useState(true);
   const imageProfile = useCallback(
-    () =>
-      // "https://waifu.now.sh/sfw/neko",
-      "",
+    () => "https://waifu.now.sh/sfw/neko",
+    // "",
     []
   );
 
@@ -52,30 +51,30 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
 
   const navLinkProp: NavLinkProp[] = [
     {
-      label: "Dashboard",
+      label: "Presensi",
       Icon: <RiDashboardFill size={16} />,
       href: "/d/presence",
       pathURI: "presence"
     },
     {
-      label: "Daftar Pengurus dan Siswa",
+      label: "Daftar Siswa",
       Icon: <RiUser3Fill size={16} />,
-      href: "/d/lists",
-      pathURI: "lists"
+      href: "/d/students",
+      pathURI: "students"
     },
     {
-      label: "Daftar Kelas dan Jurusan",
+      label: "Daftar Pengurus",
+      Icon: <RiUser3Fill size={16} />,
+      href: "/d/admins",
+      pathURI: "admins"
+    },
+    {
+      label: "Daftar Jurusan",
       Icon: <RiGroupFill size={16} />,
-      href: "/d/",
-      pathURI: "kelas"
+      href: "/d/majors",
+      pathURI: "major"
     }
   ];
-
-  useEffect(() => {
-    return () => {
-      console.log("unmounted");
-    };
-  });
 
   return (
     <AppShell
@@ -107,26 +106,6 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                     icon={Icon}
                   />
                 ))}
-                <NavLink
-                  label="Test nested parent link"
-                  opened={opened}
-                  onClick={() => setOpened()}>
-                  <NavLink
-                    label="Hellowo"
-                    icon={<RiGroupFill size={16} />}
-                    variant="filled"
-                  />
-                  <NavLink
-                    label="Hellowo"
-                    icon={<RiGroupFill size={16} />}
-                    variant="filled"
-                  />
-                  <NavLink
-                    label="Hellowo"
-                    icon={<RiGroupFill size={16} />}
-                    variant="filled"
-                  />
-                </NavLink>
               </Flex>
             </Flex>
 

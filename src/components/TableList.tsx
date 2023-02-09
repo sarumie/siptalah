@@ -2,7 +2,7 @@ import { Button, createStyles, Flex, Pagination, Table } from "@mantine/core";
 import { RiArrowRightLine } from "react-icons/ri";
 
 interface Props<T> {
-  data: T[];
+  data: T[] | null | undefined;
   /**
    * aliases for id
    */
@@ -28,7 +28,11 @@ function TableList<T extends { [key: string]: any }>({
 
   return (
     <Flex direction="column" gap="sm">
-      <Table verticalSpacing="md" horizontalSpacing="md" highlightOnHover>
+      <Table
+        verticalSpacing="md"
+        horizontalSpacing="md"
+        highlightOnHover
+        mih="30rem">
         <thead className={classes.thead}>
           <tr>
             {ths.map((value) => (

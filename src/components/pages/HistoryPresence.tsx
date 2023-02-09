@@ -28,6 +28,7 @@ const useStyles = createStyles((theme) => ({
 function HistoryPresence() {
   const [history, setHistory] = useState<PresenceHistory[]>([]);
   const { classes } = useStyles();
+  // const [isSkeleton, setIsSkeleton] = useState<boolean>(true);
 
   const getHistory = async (count: number = 9) => {
     return await fetch("https://spps.free.mockoapp.net/presences")

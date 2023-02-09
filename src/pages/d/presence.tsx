@@ -1,6 +1,5 @@
 import HistoryPresence from "@/components/pages/HistoryPresence";
 import TableList from "@/components/TableList";
-import Dashboard from "@/layouts/Dashboard";
 import {
   Button,
   Center,
@@ -148,7 +147,7 @@ export default function ListPresence() {
       <Tabs defaultValue="presence">
         <Tabs.List>
           <Tabs.Tab value="presence">Presensi</Tabs.Tab>
-          <Tabs.Tab value="history">Riwayat Kegiatan Presensi</Tabs.Tab>
+          <Tabs.Tab value="history">Riwayat</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="presence" pt="md">
