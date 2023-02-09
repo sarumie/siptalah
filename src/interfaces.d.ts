@@ -31,6 +31,14 @@ interface Presence {
   status: string;
 }
 
+interface Major {
+  id: string;
+  name: string;
+  acronym: string;
+  classTotal: string;
+  groupTotal: string;
+}
+
 interface PresenceHistory {
   id: string;
   absent: string;
