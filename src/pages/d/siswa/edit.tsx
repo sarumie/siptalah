@@ -1,5 +1,4 @@
 import ButtonLink from "@/components/ButtonLink";
-import Dashboard from "@/layouts/Dashboard";
 import {
   Button,
   Center,
@@ -11,7 +10,7 @@ import {
 } from "@mantine/core";
 import { RiArrowLeftLine } from "react-icons/ri";
 
-function EditStudent() {
+function EditSiswa() {
   const maxValAbsent = 100;
   return (
     <Center h="100vh">
@@ -75,4 +74,4 @@ function EditStudent() {
   );
 }
 
-export default EditStudent;
+export default EditSiswa;

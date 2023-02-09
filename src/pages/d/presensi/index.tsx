@@ -99,7 +99,7 @@ const StatisticPresences = () => {
   );
 };
 
-export default function ListPresence() {
+function PresensiIndex() {
   const [buttonState, toggleButtonState] = useToggle<{
     title: string;
     class: "stopBtn" | "startBtn";
@@ -144,13 +144,13 @@ export default function ListPresence() {
           <Text fw={600}>Jum&#39;at, 13 Januari 2023</Text>
         </Flex>
       </Flex>
-      <Tabs defaultValue="presence">
+      <Tabs defaultValue="hari-ini">
         <Tabs.List>
-          <Tabs.Tab value="presence">Presensi</Tabs.Tab>
-          <Tabs.Tab value="history">Riwayat</Tabs.Tab>
+          <Tabs.Tab value="hari-ini">Presensi</Tabs.Tab>
+          <Tabs.Tab value="riwayat">Riwayat</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="presence" pt="md">
+        <Tabs.Panel value="hari-ini" pt="md">
           <Flex gap="md" wrap="wrap">
             <StatisticPresences />
           </Flex>
@@ -179,10 +179,12 @@ export default function ListPresence() {
           </Flex>
         </Tabs.Panel>
 
-        <Tabs.Panel value="history" pt="md">
+        <Tabs.Panel value="riwayat" pt="md">
           <HistoryPresence />
         </Tabs.Panel>
       </Tabs>
     </Flex>
   );
 }
+
+export default PresensiIndex;
