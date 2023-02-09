@@ -53,26 +53,26 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     {
       label: "Presensi",
       Icon: <RiDashboardFill size={16} />,
-      href: "/d/presence",
-      pathURI: "presence"
+      href: "/d/presensi",
+      pathURI: "presensi"
     },
     {
       label: "Daftar Siswa",
       Icon: <RiUser3Fill size={16} />,
-      href: "/d/students",
-      pathURI: "students"
+      href: "/d/siswa",
+      pathURI: "siswa"
     },
     {
       label: "Daftar Pengurus",
       Icon: <RiUser3Fill size={16} />,
-      href: "/d/admins",
-      pathURI: "admins"
+      href: "/d/pengurus",
+      pathURI: "pengurus"
     },
     {
       label: "Daftar Jurusan",
       Icon: <RiGroupFill size={16} />,
-      href: "/d/majors",
-      pathURI: "major"
+      href: "/d/jurusan",
+      pathURI: "jurusan"
     }
   ];
 
