@@ -1,4 +1,14 @@
-import { Button, createStyles, Flex, Pagination, Table } from "@mantine/core";
+import {
+  AspectRatio,
+  Button,
+  Center,
+  createStyles,
+  Flex,
+  Pagination,
+  Table,
+  Text
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
 import { RiArrowRightLine } from "react-icons/ri";
 
 interface Props<T> {
@@ -25,13 +35,14 @@ function TableList<T extends { [key: string]: any }>({
   ignore
 }: Props<T>) {
   const { classes } = useStyles();
+  const [emptyDisplay, toggleEmptyDisplay] = useToggle();
 
   return (
     <Flex direction="column" gap="sm">
       <Table
         verticalSpacing="md"
         horizontalSpacing="md"
-        highlightOnHover
+        highlightOnHover={emptyDisplay}
         mih="30rem">
         <thead className={classes.thead}>
           <tr>
@@ -41,14 +52,39 @@ function TableList<T extends { [key: string]: any }>({
           </tr>
         </thead>
         <tbody>
-          {data?.map((dataInArr) => (
-            <tr key={dataInArr["id"]}>
-              {Object.entries(dataInArr).map((val) => {
-                if (val[0] == ignore || val[0] == "id") return;
-                return <td key={val[0]}>{val[1]}</td>;
-              })}
-            </tr>
-          ))}
+          {
+            // data?.length
+            emptyDisplay ? (
+              data?.map((dataInArr) => (
+                <tr key={dataInArr["id"]}>
+                  {Object.entries(dataInArr).map((val) => {
+                    if (val[0] == ignore || val[0] == "id") return;
+                    return <td key={val[0]}>{val[1]}</td>;
+                  })}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={999}>
+                  <AspectRatio
+                    ratio={128 / 128}
+                    sx={{ maxWidth: 128 }}
+                    mx="auto">
+                    <object
+                      title="Tidak ada orang"
+                      data="/no_data.svg"
+                      type="image/svg+xml"
+                    />
+                  </AspectRatio>
+                  <Center mt="md">
+                    <Text fw={600} c="dark.3">
+                      Tidak ada informasi yang ditampilkan
+                    </Text>
+                  </Center>
+                </td>
+              </tr>
+            )
+          }
         </tbody>
       </Table>
       <Flex justify="space-between">
@@ -56,6 +92,7 @@ function TableList<T extends { [key: string]: any }>({
         <Button variant="outline" rightIcon={<RiArrowRightLine />}>
           Lompat ke halaman...
         </Button>
+        <Button onClick={() => toggleEmptyDisplay()}>toggle empty</Button>
       </Flex>
     </Flex>
   );
