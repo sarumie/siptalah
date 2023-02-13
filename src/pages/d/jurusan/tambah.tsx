@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { RiArrowLeftLine } from "react-icons/ri";
 
-function AddManagerPage() {
+function AddMajorPage() {
   return (
     <Center h="100vh">
       <Flex gap="md" direction="column" maw="400px">
@@ -69,7 +69,7 @@ function AddManagerPage() {
           </Flex>
           <Button>Tambah</Button>
           <ButtonLink leftIcon={<RiArrowLeftLine />}>
-            Kembali ke halaman daftar siswa
+            Kembali ke halaman daftar jurusan
           </ButtonLink>
         </Stack>
       </Flex>
@@ -77,4 +77,4 @@ function AddManagerPage() {
   );
 }
 
-export default AddManagerPage;
+export default AddMajorPage;
