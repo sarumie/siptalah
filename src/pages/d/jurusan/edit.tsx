@@ -12,11 +12,11 @@ import {
 } from "@mantine/core";
 import { RiAddFill, RiArrowLeftLine, RiDeleteBinLine } from "react-icons/ri";
 
-function AddMajorPage() {
+function EditMajorPage() {
   return (
     <Center h="100vh">
       <Flex gap="md" direction="column" maw="400px">
-        <Title order={1}>Tambah Data Jurusan</Title>
+        <Title order={1}>Edit Data Jurusan</Title>
 
         <Grid>
           <Grid.Col span="auto">
@@ -25,6 +25,7 @@ function AddMajorPage() {
               label="Nama Jurusan"
               placeholder="ex: Rekayasa Perangkat Lunak"
               autoComplete="none"
+              defaultValue="Rekayasa Perangkat Lunak"
             />
           </Grid.Col>
           <Grid.Col span={3}>
@@ -34,6 +35,7 @@ function AddMajorPage() {
               placeholder="ex: RPL"
               maxLength={4}
               autoComplete="none"
+              defaultValue="RPL"
             />
           </Grid.Col>
         </Grid>
@@ -54,7 +56,7 @@ function AddMajorPage() {
             <Chip name="class" value="xi">
               XI
             </Chip>
-            <Chip name="class" value="xii">
+            <Chip name="class" value="xii" defaultChecked>
               XII
             </Chip>
           </Chip.Group>
@@ -70,7 +72,7 @@ function AddMajorPage() {
             </ActionIcon>
           </Flex>
           <Chip.Group>
-            <Chip name="group" value="A">
+            <Chip name="group" value="A" defaultChecked>
               A
             </Chip>
             <Chip name="group" value="B">
@@ -91,4 +93,4 @@ function AddMajorPage() {
   );
 }
 
-export default AddMajorPage;
+export default EditMajorPage;
