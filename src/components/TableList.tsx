@@ -40,7 +40,7 @@ function TableList<T extends { [key: string]: any }>({
         withBorder
         verticalSpacing="md"
         horizontalSpacing="md"
-        highlightOnHover={emptyDisplay}
+        highlightOnHover={!emptyDisplay}
         mih="30rem">
         <thead className={classes.thead}>
           <tr>
@@ -52,7 +52,7 @@ function TableList<T extends { [key: string]: any }>({
         <tbody>
           {
             // data?.length
-            emptyDisplay ? (
+            !emptyDisplay ? (
               data?.map((dataInArr) => (
                 <tr key={dataInArr["id"]}>
                   {Object.entries(dataInArr).map((val) => {
