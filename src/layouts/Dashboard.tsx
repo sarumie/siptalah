@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import ProfileMenuButton from "@/components/ProfileMenuButton";
+import { useCallback } from "react";
 import {
   AppShell,
   Navbar,
@@ -21,6 +20,7 @@ import {
 } from "react-icons/ri";
 import Link from "next/link";
 import { useToggle } from "@mantine/hooks";
+import ProfileMenu from "@/components/ProfileMenu";
 
 interface NavLinkProp {
   label: string;
@@ -40,11 +40,6 @@ const useStyles = createStyles((theme) => ({
 export default function Dashboard({ children }: React.ComponentProps<"div">) {
   const [opened, setOpened] = useToggle();
   // const [active, setActive] = useState(true);
-  const imageProfile = useCallback(
-    () => "https://waifu.now.sh/sfw/neko",
-    // "",
-    []
-  );
 
   const { classes } = useStyles();
   const route = useRouter();
@@ -109,29 +104,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
               </Flex>
             </Flex>
 
-            <Box className={classes.box}>
-              <ProfileMenuButton py="md" px="md">
-                <Grid align="center">
-                  <Grid.Col span="auto">
-                    <Avatar src={imageProfile()} radius="xl" />
-                  </Grid.Col>
-
-                  <Grid.Col span={8}>
-                    <Flex direction="column">
-                      <Text fw={600} truncate>
-                        Gloria G. Johnsonnnnnnnn
-                      </Text>
-                      <Text color="dark.3" size="xs" truncate>
-                        mumumumumumumumumumu@gmail.com
-                      </Text>
-                    </Flex>
-                  </Grid.Col>
-                  <Grid.Col span="auto">
-                    <RiArrowDropRightLine size={24} />
-                  </Grid.Col>
-                </Grid>
-              </ProfileMenuButton>
-            </Box>
+            <ProfileMenu />
           </Flex>
         </Navbar>
       }>
