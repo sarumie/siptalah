@@ -63,7 +63,6 @@ const theme: MantineThemeOverride = {
               }
             }
           };
-
         return {};
       }
     }
