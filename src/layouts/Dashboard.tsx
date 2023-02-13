@@ -119,10 +119,10 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                   <Grid.Col span={8}>
                     <Flex direction="column">
                       <Text fw={600} truncate>
-                        Gloria G. Johnson
+                        Gloria G. Johnsonnnnnnnn
                       </Text>
                       <Text color="dark.3" size="xs" truncate>
-                        mumumumumu@gmail.com
+                        mumumumumumumumumumu@gmail.com
                       </Text>
                     </Flex>
                   </Grid.Col>
