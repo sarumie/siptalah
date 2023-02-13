@@ -1,6 +1,7 @@
 import HistoryPresence from "@/components/pages/HistoryPresence";
 import TableList from "@/components/TableList";
 import {
+  Box,
   Button,
   Center,
   createStyles,

@@ -19,8 +19,8 @@ function AddStudentPage() {
         <Title order={1}>Tambah Data Siswa</Title>
         <Flex gap="md">
           <NumberInput
-            label="No. Absent"
             name="absent"
+            label="No. Absen"
             hideControls
             min={1}
             max={maxValAbsent}
