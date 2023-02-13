@@ -1,4 +1,5 @@
 import ButtonLink from "@/components/ButtonLink";
+import { LIST } from "@/constants";
 import {
   Button,
   Center,
@@ -30,26 +31,18 @@ function EditSiswa() {
             name="class"
             label="Kelas"
             searchable
-            nothingFound="Kelas tidak ditemukan"
             defaultValue="XII"
-            data={["XII", "XI", "X"]}
+            data={LIST.CLASS}
           />
 
-          <Select
-            name="major"
-            label="Jurusan"
-            searchable
-            nothingFound="Jurusan tidak ditemukan"
-            data={["RPL", "DG", "PD", "ANI", "DKV"]}
-          />
+          <Select name="major" label="Jurusan" searchable data={LIST.MAJOR} />
 
           <Select
             name="part"
             label="Bagian"
             searchable
             defaultValue="A"
-            nothingFound="Bagian kelas tidak ditemukan"
-            data={["A", "B", "C"]}
+            data={LIST.CLASS_GROUP}
           />
         </Flex>
         <TextInput

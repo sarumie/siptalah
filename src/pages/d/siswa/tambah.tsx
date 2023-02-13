@@ -1,4 +1,5 @@
 import ButtonLink from "@/components/ButtonLink";
+import { LIST } from "@/constants";
 import {
   Button,
   Center,
@@ -30,7 +31,7 @@ function AddStudentPage() {
             label="Kelas"
             searchable
             nothingFound="Kelas tidak ditemukan"
-            data={["XII A", "XII B", "XII C"]}
+            data={LIST.CLASS}
           />
 
           <Select
@@ -38,7 +39,7 @@ function AddStudentPage() {
             label="Jurusan"
             searchable
             nothingFound="Jurusan tidak ditemukan"
-            data={["RPL", "DG", "PD", "ANI", "DKV"]}
+            data={LIST.MAJOR}
           />
 
           <Select
@@ -46,7 +47,7 @@ function AddStudentPage() {
             label="Bagian"
             searchable
             nothingFound="Bagian kelas tidak ditemukan"
-            data={["A", "B", "C"]}
+            data={LIST.CLASS_GROUP}
           />
         </Flex>
         <TextInput
