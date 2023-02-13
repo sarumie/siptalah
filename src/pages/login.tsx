@@ -88,7 +88,7 @@ export default function Login() {
               {...form.getInputProps("nip")}
             />
             <Button type="submit" component={Link} href="/d/presensi" fullWidth>
-              Continue
+              Masuk
             </Button>
           </Flex>
         </InheritStyledForm>
