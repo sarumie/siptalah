@@ -23,7 +23,7 @@ const theme: MantineThemeOverride = {
   },
   colorScheme: "light",
   primaryColor: "gray",
-  primaryShade: 9,
+  primaryShade: 8,
   black: "#1E1E1E",
   white: "#F8F8F8",
   radius: { xs: 2, sm: 4, md: 8, lg: 16 },
