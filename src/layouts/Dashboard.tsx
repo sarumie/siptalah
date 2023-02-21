@@ -1,23 +1,13 @@
-import { useCallback } from "react";
 import {
   AppShell,
   Navbar,
-  Text,
-  Box,
   Flex,
-  Avatar,
   Title,
   NavLink,
-  Grid,
   createStyles
 } from "@mantine/core";
 import { useRouter } from "next/router";
-import {
-  RiArrowDropRightLine,
-  RiDashboardFill,
-  RiGroupFill,
-  RiUser3Fill
-} from "react-icons/ri";
+import { RiDashboardFill, RiGroupFill, RiUser3Fill } from "react-icons/ri";
 import Link from "next/link";
 import { useToggle } from "@mantine/hooks";
 import ProfileMenu from "@/components/ProfileMenu";
@@ -34,6 +24,9 @@ const useStyles = createStyles((theme) => ({
   box: {
     borderTop: "1px solid",
     borderColor: theme.colors.gray[3]
+  },
+  navLink: {
+    borderRadius: theme.radius.md
   }
 }));
 
@@ -86,7 +79,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                 SPPS
               </Title>
               {/* Navigations */}
-              <Flex gap="sm" direction="inherit">
+              <Flex gap="sm" direction="inherit" px="md">
                 {navLinkProp.map(({ label, pathURI, href, Icon }) => (
                   <NavLink
                     key={label}
@@ -99,6 +92,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
                     href={href}
                     label={label}
                     icon={Icon}
+                    className={classes.navLink}
                   />
                 ))}
               </Flex>
