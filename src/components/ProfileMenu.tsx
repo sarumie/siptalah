@@ -10,7 +10,7 @@ import {
 import { RiArrowDropRightLine, RiLogoutCircleLine } from "react-icons/ri";
 
 const useStyles = createStyles((theme) => ({
-  btn: {
+  button: {
     borderTop: "1px solid",
     borderColor: theme.colors.gray[3],
     display: "block",
@@ -19,6 +19,13 @@ const useStyles = createStyles((theme) => ({
     // color: theme.black,
     "&:hover": {
       backgroundColor: theme.colors.gray[3]
+    }
+  },
+  buttonLogOut: {
+    color: theme.colors.red[0],
+    backgroundColor: theme.colors.red[8],
+    ":hover": {
+      backgroundColor: theme.colors.red[9]
     }
   }
 }));
@@ -29,7 +36,7 @@ function ProfileMenu() {
   return (
     <Menu position="right-end" withArrow>
       <Menu.Target>
-        <UnstyledButton className={classes.btn}>
+        <UnstyledButton className={classes.button}>
           <Grid align="center">
             <Grid.Col span="auto">
               <Avatar
@@ -58,13 +65,7 @@ function ProfileMenu() {
         <Menu.Item
           icon={<RiLogoutCircleLine />}
           p="lg"
-          sx={(theme) => ({
-            color: theme.colors.red[0],
-            backgroundColor: theme.colors.red[8],
-            ":hover": {
-              backgroundColor: theme.colors.red[9]
-            }
-          })}>
+          className={classes.buttonLogOut}>
           Log Out
         </Menu.Item>
       </Menu.Dropdown>
