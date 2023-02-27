@@ -3,3 +3,5 @@ export const LIST = {
   MAJOR: ["RPL", "DG", "PD", "ANI", "DKV"],
   CLASS_GROUP: ["A", "B", "C"]
 };
+
+export const maxValAbsent = 100;
