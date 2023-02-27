@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum ROLE {
+  HIGHEST
+  BASIC
+}
+
+enum Status {
+  Hadir
+  Izin
+  Sakit
+  Alpha
+  Terlambat
+}
+
+model Profile {
+  id              Int            @id @default(autoincrement())
+  fullName        String
+  email           String         @unique
+  password        String
+  student         Student?       @relation(fields: [studentId], references: [id])
+  administrator   Administrator? @relation(fields: [administratorId], references: [id])
+  administratorId Int?           @unique
+  studentId       Int?           @unique
+}
+
+model Student {
+  id         Int       @id @default(autoincrement())
+  profile    Profile?
+  placement  String
+  nis        String
+  status     Status    @default(Alpha)
+  precense   Presence? @relation(fields: [precenseId], references: [id])
+  precenseId Int?
+  absenceId  Int
+  deviceId   String?
+  deviceName String?
+
+  @@unique([deviceId, nis])
+}
+
+model Administrator {
+  id      Int      @id @default(autoincrement())
+  profile Profile?
+  nip     String   @unique
+  role    ROLE
+  access  String[]
+}
+
+model Presence {
+  id        Int       @id @default(autoincrement())
+  open      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  Student   Student[]
+}
+
+model Major {
+  id      Int      @id @default(autoincrement())
+  name    String
+  acronym String
+  class   String[]
+  group   String[]
+}
