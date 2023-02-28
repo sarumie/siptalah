@@ -1,4 +1,4 @@
-import "@fontsource/inter/variable.css";
+import "@fontsource/inter/variable-full.css";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import theme from "@/theme";
