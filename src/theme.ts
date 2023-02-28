@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { type MantineThemeOverride } from "@mantine/core";
 
 const theme: MantineThemeOverride = {
@@ -38,8 +39,10 @@ const theme: MantineThemeOverride = {
   components: {
     NavLink: {
       defaultProps: {
-        // Buat nge-trigger pas ke-hover kelihatan berubah bg nya
-        // Khusus hanya tema black-white
+        /**
+         * nge-trigger pas ke-hover kelihatan berubah bg nya
+         * Hanya khusus tema black-white
+         */
         active: true
       },
       styles: (theme) => ({
@@ -53,19 +56,27 @@ const theme: MantineThemeOverride = {
       })
     },
     Button: {
-      // @ts-ignore
-      styles(theme, params) {
-        if (params.variant == "outline")
-          return {
-            root: {
-              ":hover": {
-                backgroundColor: theme.colors.gray[2]
+      styles: (theme, params) =>
+        params.variant == "outline"
+          ? {
+              root: {
+                ":hover": {
+                  backgroundColor: theme.colors.gray[2]
+                }
               }
             }
-          };
-        return {};
-      }
+          : {
+              root: {}
+            }
     }
+    // Modal: {
+    //   styles: (theme) => ({
+    //     body: {
+    //       // backgroundColor: theme.colors.gray[8]
+    //       // borderBottom: `1px solid ${theme.colors.gray[7]}`
+    //     }
+    //   })
+    // }
   }
 };
 
