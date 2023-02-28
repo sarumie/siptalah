@@ -9,19 +9,32 @@ import {
 } from "react-icons/ri";
 import TableList from "@/components/TableList";
 
-function Index() {
+// Axios
+import axios from "axios";
+
+// Prisma
+import { prisma } from "prisma/client";
+
+// export async function getServerSideProps() {
+//   const initialData = await prisma.student.findMany({
+//     include: {
+//       profile: {
+//         select: {
+//           fullName: true,
+//           email: true,
+//           password: true
+//         }
+//       }
+//     }
+//   });
+
+//   return {
+//     props: { initialData }
+//   };
+// }
+
+function Index({ initialData }: any) {
   const [students, setStudents] = useState<Student[]>([]);
-
-  const getStudents = async () => {
-    return await fetch("https://spps.free.mockoapp.net/students")
-      .then((resolve) => resolve.json())
-      .then((data) => setStudents(() => data))
-      .catch((error) => console.log("Data siswa tidak bisa diambil", error));
-  };
-
-  useEffect(() => {
-    getStudents();
-  }, []);
 
   return (
     <Flex direction="column" gap="md">

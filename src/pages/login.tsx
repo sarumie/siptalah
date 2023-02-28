@@ -14,7 +14,9 @@ import {
   useMantineTheme
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import axios from "axios";
 import Link from "next/link";
+import { useState } from "react";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 
 const InheritStyledForm = styled.form`
@@ -35,7 +37,23 @@ const ButtonLink = createPolymorphicComponent<"button", ButtonProps>(
   _ButtonLink
 );
 
+async function auth(
+  fullName: string,
+  nip: string,
+  href: string,
+  loadingDispath: React.Dispatch<boolean>
+) {
+  loadingDispath(true);
+  const { data } = await axios.post(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${fullName}/${nip}`
+  );
+
+  console.log(data);
+  console.log(nip);
+}
+
 export default function Login() {
+  const [loading, setLoading] = useState(false);
   const theme = useMantineTheme();
   const form = useForm({
     initialValues: {
@@ -56,7 +74,9 @@ export default function Login() {
     }
   ];
 
-  const getAuth = form.onSubmit((values) => console.log(values));
+  const getAuth = form.onSubmit((values) =>
+    auth(values.fullName, values.nip, "/d/presensi", setLoading)
+  );
 
   return (
     <Flex h="100vh" justify="center" align="center">
@@ -87,8 +107,8 @@ export default function Login() {
               hideControls
               {...form.getInputProps("nip")}
             />
-            <Button type="submit" component={Link} href="/d/presensi" fullWidth>
-              Masuk
+            <Button type="submit" disabled={loading} fullWidth>
+              {loading ? "Autentikasi..." : "Masuk"}
             </Button>
           </Flex>
         </InheritStyledForm>

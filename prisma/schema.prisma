@@ -11,7 +11,7 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-enum ROLE {
+enum LEVEL {
   HIGHEST
   BASIC
 }
@@ -24,52 +24,59 @@ enum Status {
   Terlambat
 }
 
-model Profile {
-  id              Int            @id @default(autoincrement())
-  fullName        String
-  email           String         @unique
-  password        String
-  student         Student?       @relation(fields: [studentId], references: [id])
-  administrator   Administrator? @relation(fields: [administratorId], references: [id])
-  administratorId Int?           @unique
-  studentId       Int?           @unique
+model Major {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  acronym String   @unique
+  class   String[]
+  group   String[]
+
+  @@index([name])
 }
 
 model Student {
-  id         Int       @id @default(autoincrement())
-  profile    Profile?
-  placement  String
-  nis        String
-  status     Status    @default(Alpha)
-  precense   Presence? @relation(fields: [precenseId], references: [id])
-  precenseId Int?
-  absenceId  Int
-  deviceId   String?
-  deviceName String?
+  id                Int                 @id @default(autoincrement())
+  fullName          String              @unique
+  placement         String
+  nis               String              @unique
+  absenceId         Int
+  deviceId          String?
+  deviceName        String?
+  PresenceToStudent PresenceToStudent[]
 
-  @@unique([deviceId, nis])
+  @@index([fullName, nis])
 }
 
 model Administrator {
-  id      Int      @id @default(autoincrement())
-  profile Profile?
-  nip     String   @unique
-  role    ROLE
-  access  String[]
+  id          Int      @id @default(autoincrement())
+  fullName    String   @unique
+  nip         String   @unique
+  level       LEVEL    @default(BASIC)
+  access      String[]
+  phoneNumber String
+  login       Boolean  @default(false)
+
+  @@index([fullName, nip])
 }
 
 model Presence {
-  id        Int       @id @default(autoincrement())
-  open      Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  Student   Student[]
+  id                Int                 @id @default(autoincrement())
+  open              Boolean             @default(false)
+  openAt            DateTime            @default(now())
+  PresenceToStudent PresenceToStudent[]
 }
 
-model Major {
-  id      Int      @id @default(autoincrement())
-  name    String
-  acronym String
-  class   String[]
-  group   String[]
+model PresenceToStudent {
+  presenceId Int
+  studentId  Int?
+
+  status Status @default(Alpha)
+
+  student  Student? @relation(fields: [studentId], references: [id])
+  presence Presence @relation(fields: [presenceId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@id([presenceId])
 }
