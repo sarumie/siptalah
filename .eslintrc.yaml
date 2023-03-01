@@ -3,9 +3,6 @@ extends: "next/core-web-vitals"
 ignorePatterns:
   - "*.config.*"
 rules:
-  indent:
-    - warn
-    - 2
   quotes:
     - error
     - double
