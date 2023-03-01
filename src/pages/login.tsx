@@ -15,7 +15,8 @@ import {
   ButtonProps,
   UnstyledButton,
   useMantineTheme,
-  Notification
+  Notification,
+  createStyles
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
@@ -27,22 +28,27 @@ import {
   AuthPropType
 } from "@/lib/types/login/loginType";
 import { NextRouter } from "next/router";
-
-// Axios
 import axios from "axios";
-
-// Utils
 import { LocalStorage } from "@/lib/utils/LocalStorage";
-
-// Next
 import Link from "next/link";
 import { useRouter } from "next/router";
-
-// React
 import { useEffect, useReducer } from "react";
-
-// Icons
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
+
+const useStyles = createStyles((theme) => ({
+  form: {
+    all: "inherit"
+  },
+  buttonLink: {
+    color: theme.black,
+    textDecoration: "underline",
+    padding: 0,
+    ":hover": {
+      color: theme.colors.dark[3],
+      cursor: "pointer"
+    }
+  }
+}));
 
 const InheritStyledForm = styled.form`
   all: inherit;
@@ -109,9 +115,10 @@ async function auth({
   });
 
   // Start Authentication
-  const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${fullName}/${nip}`
-  );
+  const { data } = await axios.post("/api/auth/login", {
+    nip,
+    fullName
+  });
 
   if (!data) {
     loginDispatch({
@@ -137,7 +144,7 @@ async function auth({
 export default function Login() {
   const [loginState, setLoginState] = useReducer(reducer, initialState);
   const router = useRouter();
-  const theme = useMantineTheme();
+  const { classes, theme } = useStyles();
   const form = useForm({
     initialValues: {
       fullName: "",
@@ -187,7 +194,7 @@ export default function Login() {
           </Notification>
         )}
 
-        <InheritStyledForm onSubmit={getAuth}>
+        <form onSubmit={getAuth} className={classes.form}>
           <Flex direction="column" align="center" gap="sm">
             <Title order={4}>Login</Title>
             <Input
@@ -207,7 +214,7 @@ export default function Login() {
               {loginState.isLoading ? "Autentikasi..." : "Masuk"}
             </Button>
           </Flex>
-        </InheritStyledForm>
+        </form>
         <Flex direction="column" align="center">
           <Text fz="xs" fw={600}>
             Tidak punya akun?

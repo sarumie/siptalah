@@ -39,7 +39,7 @@ model Student {
   fullName          String              @unique
   placement         String
   nis               String              @unique
-  absenceId         Int
+  // absenceId         Int
   deviceId          String?
   deviceName        String?
   PresenceToStudent PresenceToStudent[]
