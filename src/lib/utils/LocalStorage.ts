@@ -1,6 +1,3 @@
-// Type
-import { LocalStoragePropType } from "../types/utils/localStorageType";
-
 function LocalStorage({ method, key, value }: LocalStoragePropType) {
   switch (method) {
     case "get":

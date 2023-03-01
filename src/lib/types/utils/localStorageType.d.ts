@@ -3,5 +3,3 @@ type LocalStoragePropType = {
   key: "spps.userInfo";
   value?: any;
 };
-
-export type { LocalStoragePropType };

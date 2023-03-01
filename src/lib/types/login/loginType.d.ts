@@ -33,10 +33,3 @@ type LoginStateType = {
   message: string | undefined;
   pass: boolean | undefined;
 };
-
-export type {
-  LoginReducerPropType,
-  LoginReducerType,
-  LoginStateType,
-  AuthPropType
-};
