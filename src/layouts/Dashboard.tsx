@@ -97,12 +97,12 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     if (!userInfo) {
       route.push("/login");
     } else {
-      console.log(userInfo);
+      console.log(userInfo.result);
       setOathSet((state) => {
         return {
           isLoading: false,
           userInfo: {
-            ...userInfo
+            ...userInfo.result
           }
         };
       });
@@ -129,6 +129,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
               <Flex gap="sm" direction="inherit" px="md">
                 {!oathState.isLoading &&
                   navLinkProp.map(({ label, pathURI, href, Icon, level }) => {
+                    console.log(oathState.userInfo?.level);
                     if (
                       level === "ALL" ||
                       oathState.userInfo?.level === level
