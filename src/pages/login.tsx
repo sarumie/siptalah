@@ -15,7 +15,8 @@ import {
   ButtonProps,
   UnstyledButton,
   useMantineTheme,
-  Notification
+  Notification,
+  ScrollArea
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
@@ -28,13 +29,14 @@ import {
 import { NextRouter } from "next/router";
 
 // Axios
-import axios from "axios";
+import axios from "@/lib/utils/axios";
 
 // Utils
 import { LocalStorage } from "@/lib/utils/LocalStorage";
 
 // Next
 import Link from "next/link";
+import { InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 
 // React
@@ -42,6 +44,11 @@ import { useEffect, useReducer } from "react";
 
 // Icons
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
+import { GetStaticProps } from "next";
+
+// Server
+import getContacts from "@/pages/api/contact";
+import { Administrator } from "@prisma/client";
 
 const InheritStyledForm = styled.form`
   all: inherit;
@@ -121,9 +128,10 @@ async function auth({
   });
 
   // Start Authentication
-  const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${fullName}/${nip}`
-  );
+  const { data } = await axios.post("/api/auth", {
+    nip,
+    fullName
+  });
 
   const parsedData = data.result;
 
@@ -135,21 +143,24 @@ async function auth({
         message: "Nama atau NIP anda salah!"
       }
     });
-  } else {
-    loginDispatch({
-      type: "handleReset"
-    });
-
-    LocalStorage({
-      key: "spps.userInfo",
-      method: "set",
-      value: data
-    });
-    router.replace(href!);
   }
+
+  loginDispatch({
+    type: "handleReset"
+  });
+
+  LocalStorage({
+    key: "spps.userInfo",
+    method: "set",
+    value: data
+  });
+
+  router.replace(href!);
 }
 
-export default function Login() {
+export default function Login({
+  contacts
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [loginState, setLoginState] = useReducer(reducer, initialState);
   const router = useRouter();
   const theme = useMantineTheme();
@@ -173,17 +184,17 @@ export default function Login() {
     });
   }, [router]);
 
-  const whatsappContacts = [
-    { fullName: "Muhammad Iqbal", number: "+6282649273472" },
-    {
-      fullName: "Jonathan Kurniawan",
-      number: "+628327428174"
-    },
-    {
-      fullName: "Kita Abdurrahman Saleh",
-      number: "+6291047238394"
-    }
-  ];
+  // const contacts = [
+  //   { fullName: "Muhammad Iqbal", number: "+6282649273472" },
+  //   {
+  //     fullName: "Jonathan Kurniawan",
+  //     number: "+628327428174"
+  //   },
+  //   {
+  //     fullName: "Kita Abdurrahman Saleh",
+  //     number: "+6291047238394"
+  //   }
+  // ];
 
   const getAuth = form.onSubmit((values) =>
     auth({
@@ -264,32 +275,51 @@ export default function Login() {
 
             <Menu.Dropdown>
               <Menu.Label>Daftar Kontak</Menu.Label>
-              {whatsappContacts.map(({ fullName, number }) => (
-                <Menu.Item
-                  key={number}
-                  icon={
-                    <RiWhatsappLine size={20} color={theme.colors.dark[3]} />
-                  }
-                  rightSection={<RiArrowRightSLine size={20} />}
-                  px="md"
-                  component="a"
-                  href={`https://wa.me/${number}`}
-                  target="_blank"
-                  sx={(theme) => ({ gap: theme.spacing.sm })}>
-                  <Flex direction="column" mr="md">
-                    <Text fz="sm" fw={600}>
-                      {fullName}
-                    </Text>
-                    <Text fz="xs" c="dark.3">
-                      {number}
-                    </Text>
-                  </Flex>
-                </Menu.Item>
-              ))}
+              <ScrollArea style={{ height: 250 }}>
+                {contacts.map(({ fullName, phoneNumber }) => (
+                  <Menu.Item
+                    key={phoneNumber}
+                    icon={
+                      <RiWhatsappLine size={20} color={theme.colors.dark[3]} />
+                    }
+                    rightSection={<RiArrowRightSLine size={20} />}
+                    px="md"
+                    component="a"
+                    href={`https://wa.me/${phoneNumber}`}
+                    target="_blank"
+                    sx={(theme) => ({ gap: theme.spacing.sm })}>
+                    <Flex direction="column" mr="md">
+                      <Text fz="sm" fw={600}>
+                        {fullName}
+                      </Text>
+                      <Text fz="xs" c="dark.3">
+                        {phoneNumber}
+                      </Text>
+                    </Flex>
+                  </Menu.Item>
+                ))}
+              </ScrollArea>
             </Menu.Dropdown>
           </Menu>
         </Flex>
       </Flex>
     </Flex>
   );
+}
+
+export async function getStaticProps() {
+  const {
+    data: { result: contacts },
+    status
+  } = await axios.get<{ result: Administrator[] }>("contact");
+
+  // console.log(contacts);
+
+  // return { notFound: true };
+
+  return {
+    props: {
+      contacts
+    }
+  };
 }
