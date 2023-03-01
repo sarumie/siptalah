@@ -1,27 +1,45 @@
+// Mantine
 import { Button, Flex, TextInput, Title } from "@mantine/core";
+
+// React
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
   RiAddFill,
   RiDeleteBinFill,
   RiPencilFill,
   RiSearchLine
 } from "react-icons/ri";
+
+// Next
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+// Utils
+import { LocalStorage } from "@/lib/utils/LocalStorage";
+
+// Components
 import TableList from "@/components/TableList";
 
 function Index() {
   const [majors, setMajors] = useState<Major[]>([]);
+  const router = useRouter();
 
-  const getMajors = async () => {
-    return await fetch("https://spps.free.mockoapp.net/majors")
-      .then((resolve) => resolve.json())
-      .then((data) => setMajors(() => data))
-      .catch((error) => console.log("Data jurusan tidak bisa diambil", error));
-  };
+  // const getMajors = async () => {
+  //   return await fetch("https://spps.free.mockoapp.net/majors")
+  //     .then((resolve) => resolve.json())
+  //     .then((data) => setMajors(() => data))
+  //     .catch((error) => console.log("Data jurusan tidak bisa diambil", error));
+  // };
 
   useEffect(() => {
-    getMajors();
-  }, []);
+    const loginStatus = LocalStorage({
+      method: "get",
+      key: "spps.userInfo"
+    });
+
+    if (!loginStatus) router.push("/login");
+    // getMajors();
+  }, [router]);
 
   return (
     <Flex direction="column" gap="md">

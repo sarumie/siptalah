@@ -1,26 +1,44 @@
+// Mantine
 import { Button, Flex, Tabs, TextInput, Title } from "@mantine/core";
+
+// React
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
   RiAddFill,
   RiDeleteBinFill,
   RiPencilFill,
   RiSearchLine
 } from "react-icons/ri";
+
+// Next
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+// Components
 import Table from "@/components/TableList";
+
+// Utils
+import { LocalStorage } from "@/lib/utils/LocalStorage";
 
 function Pengurus() {
   const [managers, setManagers] = useState<Manager[]>([]);
+  const router = useRouter();
 
-  const getManagers = async () => {
-    return await fetch("https://spps.free.mockoapp.net/managers")
-      .then((resolve) => resolve.json())
-      .then((data) => setManagers(() => data))
-      .catch((error) => console.log("Data pengurus tidak bisa diambil", error));
-  };
+  // const getManagers = async () => {
+  //   return await fetch("https://spps.free.mockoapp.net/managers")
+  //     .then((resolve) => resolve.json())
+  //     .then((data) => setManagers(() => data))
+  //     .catch((error) => console.log("Data pengurus tidak bisa diambil", error));
+  // };
   useEffect(() => {
-    getManagers();
-  }, []);
+    const loginStatus = LocalStorage({
+      method: "get",
+      key: "spps.userInfo"
+    });
+
+    if (!loginStatus) router.push("/login");
+    // getManagers();
+  }, [router]);
 
   return (
     <Flex direction="column" gap="md">

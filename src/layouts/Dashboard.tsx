@@ -32,7 +32,6 @@ const useStyles = createStyles((theme) => ({
 
 export default function Dashboard({ children }: React.ComponentProps<"div">) {
   const [opened, setOpened] = useToggle();
-  // const [active, setActive] = useState(true);
 
   const { classes } = useStyles();
   const route = useRouter();

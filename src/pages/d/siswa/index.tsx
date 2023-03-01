@@ -1,40 +1,40 @@
+// Mantine
 import { Button, Flex, TextInput, Title } from "@mantine/core";
-import { useState, useEffect } from "react";
+
+// Next
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+// React
+import { useState, useEffect } from "react";
 import {
   RiAddFill,
   RiDeleteBinFill,
   RiPencilFill,
   RiSearchLine
 } from "react-icons/ri";
+
+// Components
 import TableList from "@/components/TableList";
+
+// Utils
+import { LocalStorage } from "@/lib/utils/LocalStorage";
 
 // Axios
 import axios from "axios";
 
-// Prisma
-import { prisma } from "prisma/client";
-
-// export async function getServerSideProps() {
-//   const initialData = await prisma.student.findMany({
-//     include: {
-//       profile: {
-//         select: {
-//           fullName: true,
-//           email: true,
-//           password: true
-//         }
-//       }
-//     }
-//   });
-
-//   return {
-//     props: { initialData }
-//   };
-// }
-
 function Index({ initialData }: any) {
   const [students, setStudents] = useState<Student[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const loginStatus = LocalStorage({
+      method: "get",
+      key: "spps.userInfo"
+    });
+
+    if (!loginStatus) router.push("/login");
+  }, [router]);
 
   return (
     <Flex direction="column" gap="md">

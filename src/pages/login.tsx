@@ -21,7 +21,6 @@ import { useForm } from "@mantine/form";
 
 // Types
 import {
-  LoginReducerPropType,
   LoginStateType,
   LoginReducerType,
   AuthPropType
@@ -70,17 +69,30 @@ const initialState: LoginStateType = {
 
 const reducer: LoginReducerType = (state, { type, payload }) => {
   switch (type) {
+    case "handleReset":
+      return {
+        isLoading: false,
+        pass: false,
+        message: ""
+      };
+
     case "handleLoading":
       return {
         ...state,
-        isLoading: payload.isLoading
+        isLoading: payload?.isLoading
+      };
+
+    case "handleMessage":
+      return {
+        ...state,
+        message: payload?.message
       };
 
     case "handleFail":
       return {
         ...state,
-        message: payload.message,
-        isLoading: payload.isLoading
+        message: payload?.message,
+        isLoading: payload?.isLoading
       };
 
     case "handleSuccess":
@@ -88,7 +100,7 @@ const reducer: LoginReducerType = (state, { type, payload }) => {
         ...state,
         message: "",
         isLoading: false,
-        pass: payload.pass
+        pass: payload?.pass
       };
   }
 };
@@ -113,7 +125,9 @@ async function auth({
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${fullName}/${nip}`
   );
 
-  if (!data) {
+  const parsedData = data.result;
+
+  if (!parsedData || parsedData === null) {
     loginDispatch({
       type: "handleFail",
       payload: {
@@ -121,17 +135,18 @@ async function auth({
         message: "Nama atau NIP anda salah!"
       }
     });
-    return;
-  }
+  } else {
+    loginDispatch({
+      type: "handleReset"
+    });
 
-  // Redirect
-  console.log(data);
-  LocalStorage({
-    key: "spps.userInfo",
-    method: "set",
-    value: data
-  });
-  router.push(href);
+    LocalStorage({
+      key: "spps.userInfo",
+      method: "set",
+      value: data
+    });
+    router.replace(href!);
+  }
 }
 
 export default function Login() {
@@ -144,6 +159,19 @@ export default function Login() {
       nip: ""
     }
   });
+
+  useEffect(() => {
+    const loginStatus = LocalStorage({
+      method: "get",
+      key: "spps.userInfo"
+    });
+
+    if (loginStatus) router.replace("/d/presensi");
+
+    setLoginState({
+      type: "handleReset"
+    });
+  }, [router]);
 
   const whatsappContacts = [
     { fullName: "Muhammad Iqbal", number: "+6282649273472" },
@@ -182,7 +210,17 @@ export default function Login() {
         </Flex>
 
         {loginState.message && (
-          <Notification>
+          <Notification
+            color={"red"}
+            radius="md"
+            onClick={() =>
+              setLoginState({
+                type: "handleMessage",
+                payload: {
+                  message: ""
+                }
+              })
+            }>
             <p>{loginState.message}</p>
           </Notification>
         )}

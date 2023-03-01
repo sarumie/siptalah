@@ -1,5 +1,11 @@
+// Components
 import HistoryPresence from "@/components/pages/HistoryPresence";
 import TableList from "@/components/TableList";
+
+// Utils
+import { LocalStorage } from "@/lib/utils/LocalStorage";
+
+// Mantine
 import {
   Box,
   Button,
@@ -13,8 +19,13 @@ import {
   Title
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
+
+// React
 import { useState, useEffect } from "react";
 import { RiPlayFill, RiSearchLine, RiStopFill } from "react-icons/ri";
+
+// Next
+import { useRouter } from "next/router";
 
 const totalStudent = 2013;
 
@@ -119,17 +130,25 @@ function PresensiIndex() {
   ]);
   const [presences, setPresences] = useState<Presence[]>([]);
   const { classes } = useStyles();
+  const router = useRouter();
 
-  const getPresences = async () => {
-    return await fetch("https://spps.free.mockoapp.net/presences/today")
-      .then((resolve) => resolve.json())
-      .then((data) => setPresences(() => data))
-      .catch((err) => console.log("Data presensi tidak bisa diambil", err));
-  };
+  // const getPresences = async () => {
+  //   return await fetch("https://spps.free.mockoapp.net/presences/today")
+  //     .then((resolve) => resolve.json())
+  //     .then((data) => setPresences(() => data))
+  //     .catch((err) => console.log("Data presensi tidak bisa diambil", err));
+  // };
 
   useEffect(() => {
-    getPresences();
-  }, []);
+    const loginStatus = LocalStorage({
+      method: "get",
+      key: "spps.userInfo"
+    });
+
+    if (!loginStatus) router.push("/login");
+
+    // getPresences();
+  });
 
   return (
     <Flex direction="column" gap="md">
