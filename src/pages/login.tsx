@@ -1,6 +1,3 @@
-// Emotion
-import styled from "@emotion/styled";
-
 // Mantine
 import {
   Flex,
@@ -10,13 +7,10 @@ import {
   Title,
   NumberInput,
   Menu,
-  DEFAULT_THEME,
-  createPolymorphicComponent,
-  ButtonProps,
   UnstyledButton,
-  useMantineTheme,
   Notification,
-  ScrollArea
+  ScrollArea,
+  createStyles
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
@@ -26,7 +20,6 @@ import {
   LoginReducerType,
   AuthPropType
 } from "@/lib/types/login/loginType";
-import { NextRouter } from "next/router";
 
 // Axios
 import axios from "@/lib/utils/axios";
@@ -35,7 +28,6 @@ import axios from "@/lib/utils/axios";
 import { LocalStorage } from "@/lib/utils/LocalStorage";
 
 // Next
-import Link from "next/link";
 import { InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 
@@ -44,29 +36,25 @@ import { useEffect, useReducer } from "react";
 
 // Icons
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
-import { GetStaticProps } from "next";
 
 // Server
-import getContacts from "@/pages/api/contact";
 import { Administrator } from "@prisma/client";
 
-const InheritStyledForm = styled.form`
-  all: inherit;
-`;
-
-const _ButtonLink = styled(UnstyledButton)`
-  color: ${DEFAULT_THEME.black};
-  text-decoration: underline;
-  padding: 0;
-  &:hover {
-    color: ${DEFAULT_THEME.colors.dark[3]};
-    cursor: pointer;
-  }
-`;
-
-const ButtonLink = createPolymorphicComponent<"button", ButtonProps>(
-  _ButtonLink
-);
+const useStyles = createStyles((theme) => ({
+  form: {
+    all: "inherit"
+  },
+  buttonLink: {
+    color: theme.black,
+    textDecoration: "underline",
+    padding: 0,
+    "&:hover": {
+      color: theme.colors.dark[3],
+      cursor: "pointer"
+    }
+  },
+  menuItem: { gap: theme.spacing.sm }
+}));
 
 const initialState: LoginStateType = {
   isLoading: false,
@@ -129,8 +117,7 @@ async function auth({
 
   // Start Authentication
   const { data } = await axios.post("/api/auth", {
-    nip,
-    fullName
+    nip
   });
 
   const parsedData = data.result;
@@ -163,7 +150,7 @@ export default function Login({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [loginState, setLoginState] = useReducer(reducer, initialState);
   const router = useRouter();
-  const theme = useMantineTheme();
+  const { classes, theme } = useStyles();
   const form = useForm({
     initialValues: {
       fullName: "",
@@ -183,18 +170,6 @@ export default function Login({
       type: "handleReset"
     });
   }, [router]);
-
-  // const contacts = [
-  //   { fullName: "Muhammad Iqbal", number: "+6282649273472" },
-  //   {
-  //     fullName: "Jonathan Kurniawan",
-  //     number: "+628327428174"
-  //   },
-  //   {
-  //     fullName: "Kita Abdurrahman Saleh",
-  //     number: "+6291047238394"
-  //   }
-  // ];
 
   const getAuth = form.onSubmit((values) =>
     auth({
@@ -236,7 +211,7 @@ export default function Login({
           </Notification>
         )}
 
-        <InheritStyledForm onSubmit={getAuth}>
+        <form onSubmit={getAuth} className={classes.form}>
           <Flex direction="column" align="center" gap="sm">
             <Title order={4}>Login</Title>
             <Input
@@ -256,7 +231,7 @@ export default function Login({
               {loginState.isLoading ? "Autentikasi..." : "Masuk"}
             </Button>
           </Flex>
-        </InheritStyledForm>
+        </form>
         <Flex direction="column" align="center">
           <Text fz="xs" fw={600}>
             Tidak punya akun?
@@ -268,9 +243,9 @@ export default function Login({
             openDelay={100}
             closeDelay={400}>
             <Menu.Target>
-              <ButtonLink fz="xs">
+              <UnstyledButton fz="xs" className={classes.buttonLink}>
                 Hubungi admin untuk pembuatan akun baru
-              </ButtonLink>
+              </UnstyledButton>
             </Menu.Target>
 
             <Menu.Dropdown>
@@ -287,7 +262,7 @@ export default function Login({
                     component="a"
                     href={`https://wa.me/${phoneNumber}`}
                     target="_blank"
-                    sx={(theme) => ({ gap: theme.spacing.sm })}>
+                    className={classes.menuItem}>
                     <Flex direction="column" mr="md">
                       <Text fz="sm" fw={600}>
                         {fullName}
