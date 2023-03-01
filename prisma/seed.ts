@@ -1,7 +1,10 @@
+import { rand, randFullName, randNumber } from "@ngneat/falso";
 import { prisma } from "./client";
 
-async function primayState() {
-  // Major Data
+const LENGTH_DATA = 10;
+
+async function main() {
+  // Ga perlu di loop
   const major = await prisma.major.createMany({
     data: [
       {
@@ -38,60 +41,39 @@ async function primayState() {
     skipDuplicates: true
   });
 
-  // Student Data
-  const student = await prisma.student.create({
-    data: {
-      id: 1,
-      absenceId: 1,
-      nis: "212001475065",
-      placement: "XI RPL A",
-      profile: {
-        create: {
-          fullName: "Abdul Aziz Rahmat Ibnu Fani",
-          email: "abdulaziz50024@gmail.com",
-          password: "kamadoNezuko123$$"
-        }
+  for (let index = 0; index < LENGTH_DATA; index++) {
+    await prisma.student.create({
+      data: {
+        nis: `${randNumber({ min: 1000000000000, max: 9999999999999 })}`,
+        placement: "XII RPL A",
+        fullName: randFullName({ withAccents: false })
       }
-    },
-    include: {
-      profile: true
-    }
-  });
+    });
 
-  // Administrator
-  const administrator = await prisma.administrator.create({
-    data: {
-      id: 1,
-      nip: "1023948109284",
-      role: "HIGHEST",
-      access: "ALL",
-      profile: {
-        create: {
-          fullName: "Supardi Mardi",
-          email: "mardikece@gmail.com",
-          password: "kamasfasf1aqfdsf"
-        }
+    await prisma.administrator.create({
+      data: {
+        nip: `${randNumber({ min: 1000000000000, max: 9999999999999 })}`,
+        level: rand(["HIGHEST", "BASIC"]),
+        access: "ALL",
+        fullName: randFullName({ withAccents: false }),
+        phoneNumber: `08${randNumber({ min: 100_000_000, max: 999_999_999 })}`
       }
-    },
-    include: {
-      profile: true
-    }
-  });
+    });
 
-  // Presence
-  const precense = await prisma.presence.create({
-    data: {
-      open: true
-    }
-  });
+    await prisma.presence.create({
+      data: {
+        open: index == 0 ? true : false
+      }
+    });
+  }
 
-  console.log(major);
+  // console.log(major);
 
-  console.log(student);
+  // console.log(student);
 
-  console.log(administrator);
+  // console.log(administrator);
 
-  console.log(precense);
+  // console.log(precense);
 }
 
-primayState().catch((error) => console.log(error));
+main().catch((error) => console.log(error));
