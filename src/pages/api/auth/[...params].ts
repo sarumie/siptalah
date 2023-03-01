@@ -19,6 +19,7 @@ export default async function handler(
     });
     res.status(200).json({ data: user });
   } catch (error) {
+    console.log("asw");
     res.status(500).json({ data: "Ada yang salah, silahkan coba lagi 😥" });
   }
 }

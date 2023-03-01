@@ -1,4 +1,7 @@
+// Emotion
 import styled from "@emotion/styled";
+
+// Mantine
 import {
   Flex,
   Button,
@@ -11,12 +14,34 @@ import {
   createPolymorphicComponent,
   ButtonProps,
   UnstyledButton,
-  useMantineTheme
+  useMantineTheme,
+  Notification
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+
+// Types
+import {
+  LoginReducerPropType,
+  LoginStateType,
+  LoginReducerType,
+  AuthPropType
+} from "@/lib/types/login/loginType";
+import { NextRouter } from "next/router";
+
+// Axios
 import axios from "axios";
+
+// Utils
+import { LocalStorage } from "@/lib/utils/LocalStorage";
+
+// Next
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+
+// React
+import { useEffect, useReducer } from "react";
+
+// Icons
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 
 const InheritStyledForm = styled.form`
@@ -37,23 +62,81 @@ const ButtonLink = createPolymorphicComponent<"button", ButtonProps>(
   _ButtonLink
 );
 
-async function auth(
-  fullName: string,
-  nip: string,
-  href: string,
-  loadingDispath: React.Dispatch<boolean>
-) {
-  loadingDispath(true);
+const initialState: LoginStateType = {
+  isLoading: false,
+  pass: false,
+  message: ""
+};
+
+const reducer: LoginReducerType = (state, { type, payload }) => {
+  switch (type) {
+    case "handleLoading":
+      return {
+        ...state,
+        isLoading: payload.isLoading
+      };
+
+    case "handleFail":
+      return {
+        ...state,
+        message: payload.message,
+        isLoading: payload.isLoading
+      };
+
+    case "handleSuccess":
+      return {
+        ...state,
+        message: "",
+        isLoading: false,
+        pass: payload.pass
+      };
+  }
+};
+
+async function auth({
+  fullName,
+  nip,
+  href,
+  router,
+  loginDispatch
+}: AuthPropType) {
+  // Actived Loading State
+  loginDispatch({
+    type: "handleLoading",
+    payload: {
+      isLoading: true
+    }
+  });
+
+  // Start Authentication
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${fullName}/${nip}`
   );
 
+  if (!data) {
+    loginDispatch({
+      type: "handleFail",
+      payload: {
+        isLoading: false,
+        message: "Nama atau NIP anda salah!"
+      }
+    });
+    return;
+  }
+
+  // Redirect
   console.log(data);
-  console.log(nip);
+  LocalStorage({
+    key: "spps.userInfo",
+    method: "set",
+    value: data
+  });
+  router.push(href);
 }
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
+  const [loginState, setLoginState] = useReducer(reducer, initialState);
+  const router = useRouter();
   const theme = useMantineTheme();
   const form = useForm({
     initialValues: {
@@ -75,7 +158,13 @@ export default function Login() {
   ];
 
   const getAuth = form.onSubmit((values) =>
-    auth(values.fullName, values.nip, "/d/presensi", setLoading)
+    auth({
+      router,
+      fullName: values.fullName,
+      nip: values.nip,
+      href: "/d/presensi",
+      loginDispatch: setLoginState
+    })
   );
 
   return (
@@ -91,6 +180,13 @@ export default function Login() {
           <Title order={1}>SPPS</Title>
           <Text c="dark.3">Sistem Pengelolaan Data Presensi Siswa</Text>
         </Flex>
+
+        {loginState.message && (
+          <Notification>
+            <p>{loginState.message}</p>
+          </Notification>
+        )}
+
         <InheritStyledForm onSubmit={getAuth}>
           <Flex direction="column" align="center" gap="sm">
             <Title order={4}>Login</Title>
@@ -107,8 +203,8 @@ export default function Login() {
               hideControls
               {...form.getInputProps("nip")}
             />
-            <Button type="submit" disabled={loading} fullWidth>
-              {loading ? "Autentikasi..." : "Masuk"}
+            <Button type="submit" disabled={loginState.isLoading} fullWidth>
+              {loginState.isLoading ? "Autentikasi..." : "Masuk"}
             </Button>
           </Flex>
         </InheritStyledForm>
