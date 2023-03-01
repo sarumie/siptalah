@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextApiResponse, NextApiRequest } from "next";
 import { prisma } from "prisma/client";
 
@@ -5,20 +6,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { nip } = req.body;
+
+  if (Array.isArray(nip))
+    return res.status(400).json({ message: "Invalid parameter" });
+
   try {
-    const { params } = req.query;
     const user = await prisma.administrator.findUnique({
-      where: {
-        nip: params![1]
-      },
+      where: { nip },
       select: {
         fullName: true,
         access: true,
         level: true
       }
     });
+
     res.status(200).json({ result: user });
-  } catch (error) {
-    res.status(500).json({ result: "Ada yang salah, silahkan coba lagi 😥" });
+  } catch (e) {
+    if (e instanceof PrismaClientKnownRequestError)
+      res.status(500).json(e.message);
   }
 }

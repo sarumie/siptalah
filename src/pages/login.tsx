@@ -116,13 +116,15 @@ async function auth({
   });
 
   // Start Authentication
-  const { data } = await axios.post("/api/auth", {
-    nip
+  const { data, status } = await axios.post<
+    ResponseWithResult<{ nip: string }>
+  >("auth/login", {
+    nip: `${nip}`
   });
 
   const parsedData = data.result;
 
-  if (!parsedData || parsedData === null) {
+  if (!parsedData) {
     loginDispatch({
       type: "handleFail",
       payload: {
@@ -284,13 +286,8 @@ export default function Login({
 
 export async function getStaticProps() {
   const {
-    data: { result: contacts },
-    status
+    data: { result: contacts }
   } = await axios.get<{ result: Administrator[] }>("contact");
-
-  // console.log(contacts);
-
-  // return { notFound: true };
 
   return {
     props: {
