@@ -94,6 +94,7 @@ function TableList<T extends { [key: string]: any }>({
           </thead>
           <tbody>
             {
+              // * Uncommend
               // data?.length
               !emptyDisplay ? (
                 data?.map((dataInArr) => (
@@ -137,7 +138,7 @@ function TableList<T extends { [key: string]: any }>({
           <Button variant="outline" rightIcon={<RiArrowRightLine />}>
             Lompat ke halaman...
           </Button>
-          <Button onClick={() => toggleEmptyDisplay()}>toggle empty</Button>
+          {/* <Button onClick={() => toggleEmptyDisplay()}>toggle empty</Button> */}
         </Flex>
       </Flex>
     </>
