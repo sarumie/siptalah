@@ -135,10 +135,6 @@ function TableList<T extends { [key: string]: any }>({
         </Table>
         <Flex justify="space-between">
           <Pagination total={10} />
-          {/* <Button variant="outline" rightIcon={<RiArrowRightLine />}>
-            Lompat ke halaman...
-          </Button> */}
-          {/* <Button onClick={() => toggleEmptyDisplay()}>toggle empty</Button> */}
         </Flex>
       </Flex>
     </>

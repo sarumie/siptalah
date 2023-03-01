@@ -1,3 +1,4 @@
+// Mantine
 import {
   AppShell,
   Navbar,
@@ -6,17 +7,28 @@ import {
   NavLink,
   createStyles
 } from "@mantine/core";
-import { useRouter } from "next/router";
-import { RiDashboardFill, RiGroupFill, RiUser3Fill } from "react-icons/ri";
-import Link from "next/link";
 import { useToggle } from "@mantine/hooks";
+
+// Next
+import { useRouter } from "next/router";
+import Link from "next/link";
+
+// React
+import { useEffect, useState } from "react";
+import { RiDashboardFill, RiGroupFill, RiUser3Fill } from "react-icons/ri";
+
+// Components
 import ProfileMenu from "@/components/ProfileMenu";
+
+// Utils
+import { LocalStorage } from "@/lib/utils/LocalStorage";
 
 interface NavLinkProp {
   label: string;
   Icon: JSX.Element;
   href: `${"/d/"}${string}`;
   pathURI: string;
+  level: "BASIC" | "HIGHEST" | "ALL";
 }
 
 const useStyles = createStyles((theme) => ({
@@ -30,38 +42,74 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
+const initialState = {
+  isLoading: true,
+  userInfo: {
+    fullName: "",
+    level: "",
+    access: []
+  }
+};
+
+const navLinkProp: NavLinkProp[] = [
+  {
+    label: "Presensi",
+    Icon: <RiDashboardFill size={16} />,
+    href: "/d/presensi",
+    pathURI: "presensi",
+    level: "ALL"
+  },
+  {
+    label: "Daftar Siswa",
+    Icon: <RiUser3Fill size={16} />,
+    href: "/d/siswa",
+    pathURI: "siswa",
+    level: "HIGHEST"
+  },
+  {
+    label: "Daftar Pengurus",
+    Icon: <RiUser3Fill size={16} />,
+    href: "/d/pengurus",
+    pathURI: "pengurus",
+    level: "HIGHEST"
+  },
+  {
+    label: "Daftar Jurusan",
+    Icon: <RiGroupFill size={16} />,
+    href: "/d/jurusan",
+    pathURI: "jurusan",
+    level: "HIGHEST"
+  }
+];
+
 export default function Dashboard({ children }: React.ComponentProps<"div">) {
+  const [oathState, setOathSet] = useState(initialState);
   const [opened, setOpened] = useToggle();
-
-  const { classes } = useStyles();
   const route = useRouter();
+  const { classes } = useStyles();
 
-  const navLinkProp: NavLinkProp[] = [
-    {
-      label: "Presensi",
-      Icon: <RiDashboardFill size={16} />,
-      href: "/d/presensi",
-      pathURI: "presensi"
-    },
-    {
-      label: "Daftar Siswa",
-      Icon: <RiUser3Fill size={16} />,
-      href: "/d/siswa",
-      pathURI: "siswa"
-    },
-    {
-      label: "Daftar Pengurus",
-      Icon: <RiUser3Fill size={16} />,
-      href: "/d/pengurus",
-      pathURI: "pengurus"
-    },
-    {
-      label: "Daftar Jurusan",
-      Icon: <RiGroupFill size={16} />,
-      href: "/d/jurusan",
-      pathURI: "jurusan"
+  useEffect(() => {
+    const userInfo = LocalStorage({
+      method: "get",
+      key: "spps.userInfo"
+    });
+
+    if (!userInfo) {
+      route.push("/login");
+    } else {
+      console.log(userInfo);
+      setOathSet((state) => {
+        return {
+          isLoading: false,
+          userInfo: {
+            ...userInfo
+          }
+        };
+      });
     }
-  ];
+  }, [route]);
+
+  console.log(oathState);
 
   return (
     <AppShell
@@ -79,21 +127,29 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
               </Title>
               {/* Navigations */}
               <Flex gap="sm" direction="inherit" px="md">
-                {navLinkProp.map(({ label, pathURI, href, Icon }) => (
-                  <NavLink
-                    key={label}
-                    variant={
-                      route.asPath.split("/").includes(pathURI)
-                        ? "filled"
-                        : "light"
+                {!oathState.isLoading &&
+                  navLinkProp.map(({ label, pathURI, href, Icon, level }) => {
+                    if (
+                      level === "ALL" ||
+                      oathState.userInfo?.level === level
+                    ) {
+                      return (
+                        <NavLink
+                          key={label}
+                          variant={
+                            route.asPath.split("/").includes(pathURI)
+                              ? "filled"
+                              : "light"
+                          }
+                          component={Link}
+                          href={href}
+                          label={label}
+                          icon={Icon}
+                          className={classes.navLink}
+                        />
+                      );
                     }
-                    component={Link}
-                    href={href}
-                    label={label}
-                    icon={Icon}
-                    className={classes.navLink}
-                  />
-                ))}
+                  })}
               </Flex>
             </Flex>
 
