@@ -20,25 +20,32 @@ import {
   LoginReducerType,
   AuthPropType
 } from "@/lib/types/login/loginType";
-
-// Axios
-import axios from "@/lib/utils/axios";
-
-// Utils
+import { NextRouter } from "next/router";
+import axios from "axios";
 import { LocalStorage } from "@/lib/utils/LocalStorage";
-
-// Next
-import { InferGetStaticPropsType } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
-
-// React
 import { useEffect, useReducer } from "react";
-
-// Icons
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 
-// Server
-import { Administrator } from "@prisma/client";
+const useStyles = createStyles((theme) => ({
+  form: {
+    all: "inherit"
+  },
+  buttonLink: {
+    color: theme.black,
+    textDecoration: "underline",
+    padding: 0,
+    ":hover": {
+      color: theme.colors.dark[3],
+      cursor: "pointer"
+    }
+  }
+}));
+
+const InheritStyledForm = styled.form`
+  all: inherit;
+`;
 
 const useStyles = createStyles((theme) => ({
   form: {
@@ -116,10 +123,9 @@ async function auth({
   });
 
   // Start Authentication
-  const { data, status } = await axios.post<
-    ResponseWithResult<{ nip: string }>
-  >("auth/login", {
-    nip: `${nip}`
+  const { data } = await axios.post("/api/auth/login", {
+    nip,
+    fullName
   });
 
   const parsedData = data.result;
