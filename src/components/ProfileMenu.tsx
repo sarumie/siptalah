@@ -1,3 +1,4 @@
+import { LocalStorage } from "@/lib/utils/LocalStorage";
 import {
   Avatar,
   createStyles,
@@ -7,6 +8,7 @@ import {
   Text,
   UnstyledButton
 } from "@mantine/core";
+import { useRouter } from "next/router";
 import { RiArrowDropRightLine, RiLogoutCircleLine } from "react-icons/ri";
 
 const useStyles = createStyles((theme) => ({
@@ -31,6 +33,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function ProfileMenu() {
+  const route = useRouter();
   const { classes } = useStyles();
 
   return (
@@ -65,7 +68,11 @@ function ProfileMenu() {
         <Menu.Item
           icon={<RiLogoutCircleLine />}
           p="lg"
-          className={classes.buttonLogOut}>
+          className={classes.buttonLogOut}
+          onClick={() => {
+            LocalStorage({ method: "delete", key: "spps.userInfo" });
+            route.push("/login");
+          }}>
           Log Out
         </Menu.Item>
       </Menu.Dropdown>

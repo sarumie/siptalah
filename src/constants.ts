@@ -4,4 +4,5 @@ export const LIST = {
   CLASS_GROUP: ["A", "B", "C"]
 };
 
-export const maxValAbsent = 100;
+export const MAX_ABSENT = 100;
+export const TOTAL_STUDENT = 2013;

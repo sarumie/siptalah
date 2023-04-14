@@ -8,8 +8,7 @@ type Props = DefaultProps<ComponentStylesNames> & ButtonProps;
 
 // Pakai ref karena error pas di render (Kurang tau kenapa)
 export const ButtonLink = forwardRef(function ButtonLink(
-  { children, className, styles, unstyled, ...others }: Props,
-  ref
+  { children, className, styles, unstyled, ...others }: Props
 ) {
   const { classes, cx } = useStyles({}, { name: "ButtonLink", unstyled });
 

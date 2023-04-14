@@ -1,7 +1,4 @@
-// Next
 import { NextApiResponse, NextApiRequest } from "next";
-
-// Prisma
 import { prisma } from "prisma/client";
 
 export default async function handler(

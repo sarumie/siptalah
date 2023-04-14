@@ -1,6 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { NextApiResponse, NextApiRequest } from "next";
 import { prisma } from "prisma/client";
+import { NextApiResponse, NextApiRequest } from "next";
 
 export default async function handler(
   req: NextApiRequest,

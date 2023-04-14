@@ -1,4 +1,5 @@
 import { Button, createStyles, Flex, TextInput } from "@mantine/core";
+import { Presence } from "@prisma/client";
 import { useState, useEffect } from "react";
 import {
   RiDeleteBin2Fill,
@@ -26,21 +27,22 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function HistoryPresence() {
-  const [history, setHistory] = useState<PresenceHistory[]>([]);
+  const [history, setHistory] = useState<Presence[]>([]);
+
   const { classes } = useStyles();
   // const [isSkeleton, setIsSkeleton] = useState<boolean>(true);
 
-  const getHistory = async (count: number = 9) => {
-    return await fetch("https://spps.free.mockoapp.net/presences")
-      .then((resolve) => resolve.json())
-      .then((data) => setHistory(() => data))
-      .catch((err) =>
-        console.log("Data riwayat presensi tidak bisa diambil", err)
-      );
-  };
+  // const getHistory = async (count: number = 9) => {
+  //   return await fetch("https://spps.free.mockoapp.net/presences")
+  //     .then((resolve) => resolve.json())
+  //     .then((data) => setHistory(() => data))
+  //     .catch((err) =>
+  //       console.log("Data riwayat presensi tidak bisa diambil", err)
+  //     );
+  // };
 
   useEffect(() => {
-    getHistory();
+    // getHistory();
   }, []);
 
   return (

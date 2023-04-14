@@ -1,13 +1,7 @@
-// Components
 import HistoryPresence from "@/components/pages/HistoryPresence";
 import TableList from "@/components/TableList";
-
-// Utils
 import { LocalStorage } from "@/lib/utils/LocalStorage";
-
-// Mantine
 import {
-  Box,
   Button,
   Center,
   createStyles,
@@ -19,15 +13,12 @@ import {
   Title
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-
-// React
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 import { RiPlayFill, RiSearchLine, RiStopFill } from "react-icons/ri";
-
-// Next
 import { useRouter } from "next/router";
-
-const totalStudent = 2013;
+import { PresenceToStudent } from "@prisma/client";
+import axios from "@/lib/utils/axios";
+import { TOTAL_STUDENT } from "@/constants";
 
 const useStyles = createStyles((theme) => ({
   timeBox: {
@@ -56,6 +47,8 @@ const useStyles = createStyles((theme) => ({
     color: theme.white
   }
 }));
+
+const PresenceIdContext = createContext(1);
 
 const StatisticPresences = () => {
   const { classes } = useStyles();
@@ -101,7 +94,7 @@ const StatisticPresences = () => {
           <Flex direction="column">
             <Text fw={600}>{val.title}</Text>
             <Title order={6}>
-              {val.count} / {totalStudent}
+              {val.count} / {TOTAL_STUDENT}
             </Title>
           </Flex>
           <Text fz="sm">siswa</Text>
@@ -128,6 +121,7 @@ function PresensiIndex() {
       icon: <RiPlayFill />
     }
   ]);
+  const presenceId = useContext(PresenceIdContext);
   const [presences, setPresences] = useState<Presence[]>([]);
   const { classes } = useStyles();
   const router = useRouter();
@@ -138,6 +132,10 @@ function PresensiIndex() {
   //     .then((data) => setPresences(() => data))
   //     .catch((err) => console.log("Data presensi tidak bisa diambil", err));
   // };
+
+  axios
+    .get<{ result: PresenceToStudent[] }>(`presence/${presenceId}`)
+    .then((value) => {});
 
   useEffect(() => {
     const loginStatus = LocalStorage({

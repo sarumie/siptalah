@@ -46,6 +46,7 @@ async function main() {
       data: {
         nis: `${randNumber({ min: 1000000000000, max: 9999999999999 })}`,
         placement: "XII RPL A",
+        absenceId: randNumber({ min: 1000, max: 9999 }),
         fullName: randFullName({ withAccents: false })
       }
     });
