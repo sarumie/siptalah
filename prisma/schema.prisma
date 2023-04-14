@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,17 +8,16 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-enum LEVEL {
+enum Level {
   HIGHEST
   BASIC
 }
 
 enum Status {
-  Hadir
-  Izin
-  Sakit
-  Alpha
-  Terlambat
+  HADIR
+  IZIN
+  SAKIT
+  ALPHA
 }
 
 model Major {
@@ -34,15 +30,34 @@ model Major {
   @@index([name])
 }
 
+model Class {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  acronym String   @unique
+  majorId Int
+  group   String[]
+}
+
+// Kelompok per kelas
+model Group {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  acronym String @unique
+  majorId Int
+  classId Int
+}
+
 model Student {
-  id                Int                 @id @default(autoincrement())
-  fullName          String              @unique
-  placement         String
-  nis               String              @unique
-  absenceId         Int
-  deviceId          String?
-  deviceName        String?
-  PresenceToStudent PresenceToStudent[]
+  id         Int     @id @default(autoincrement())
+  fullName   String  @unique
+  placement  String
+  nis        String  @unique
+  absenceId  Int
+  deviceId   String?
+  deviceName String?
+
+  presence   Presence? @relation(fields: [presenceId], references: [id])
+  presenceId Int?
 
   @@index([fullName, nis])
 }
@@ -51,32 +66,17 @@ model Administrator {
   id          Int      @id @default(autoincrement())
   fullName    String   @unique
   nip         String   @unique
-  level       LEVEL    @default(BASIC)
+  level       Level    @default(BASIC)
   access      String[]
   phoneNumber String
-  login       Boolean  @default(false)
 
   @@index([fullName, nip])
 }
 
 model Presence {
-  id                Int                 @id @default(autoincrement())
-  open              Boolean             @default(false)
-  openAt            DateTime            @default(now())
-  PresenceToStudent PresenceToStudent[]
-}
+  id     Int      @id @default(autoincrement())
+  isOpen Boolean  @default(false)
+  openAt DateTime @default(now())
 
-model PresenceToStudent {
-  presenceId Int
-  studentId  Int?
-
-  status Status @default(Alpha)
-
-  student  Student? @relation(fields: [studentId], references: [id])
-  presence Presence @relation(fields: [presenceId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@id([presenceId])
+  student Student[]
 }
