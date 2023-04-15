@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { type MantineThemeOverride } from "@mantine/core";
 
 const theme: MantineThemeOverride = {
@@ -81,3 +80,4 @@ const theme: MantineThemeOverride = {
 };
 
 export default theme;
+
