@@ -9,8 +9,8 @@ datasource db {
 }
 
 enum Level {
-  HIGHEST
-  BASIC
+  ADMIN
+  PETUGAS
 }
 
 enum Status {
@@ -20,63 +20,73 @@ enum Status {
   ALPHA
 }
 
-model Major {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  acronym String   @unique
-  class   String[]
-  group   String[]
+model Presence {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isOpen    Boolean  @default(false)
 
-  @@index([name])
-}
-
-model Class {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  acronym String   @unique
-  majorId Int
-  group   String[]
-}
-
-// Kelompok per kelas
-model Group {
-  id      Int    @id @default(autoincrement())
-  name    String @unique
-  acronym String @unique
-  majorId Int
-  classId Int
+  student Student[]
 }
 
 model Student {
-  id         Int     @id @default(autoincrement())
-  fullName   String  @unique
-  placement  String
-  nis        String  @unique
-  absenceId  Int
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  fullName   String
+  nis        String   @unique
   deviceId   String?
   deviceName String?
 
-  presence   Presence? @relation(fields: [presenceId], references: [id])
-  presenceId Int?
+  major    Major      @relation(fields: [majorId], references: [id])
+  majorId  String
+  presence Presence[]
 
   @@index([fullName, nis])
 }
 
-model Administrator {
-  id          Int      @id @default(autoincrement())
-  fullName    String   @unique
+model Major {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  acronym   String   @unique
+
+  class   Class     @relation(fields: [classId], references: [id])
+  classId String
+  group   Group     @relation(fields: [groupId], references: [id])
+  groupId String
+  student Student[]
+  admin   Admin[]
+}
+
+model Class {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+
+  major Major[]
+}
+
+model Group {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+
+  Major Major[]
+}
+
+model Admin {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  fullName    String
   nip         String   @unique
-  level       Level    @default(BASIC)
-  access      String[]
+  level       Level    @default(PETUGAS)
+  access      Major[]
   phoneNumber String
 
   @@index([fullName, nip])
-}
-
-model Presence {
-  id     Int      @id @default(autoincrement())
-  isOpen Boolean  @default(false)
-  openAt DateTime @default(now())
-
-  student Student[]
 }
