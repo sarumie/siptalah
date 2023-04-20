@@ -15,8 +15,15 @@ Penjelasan:
 - `refactor`: (refactoring production code, eg. renaming a variable)
 - `test`: (adding missing tests, refactoring tests; no production code change)
 - `chore`: (updating grunt tasks etc; no production code change)
+- `revert`: (reverts a previous commit)
+- `rules`: (update rules)
 
 Referensi:
 
 - <https://www.conventionalcommits.org/>
 - <https://sparkbox.com/foundry/semantic_commit_messages>
+
+Documentation:
+
+Di `cookies`, ada key name `auth_token` yang berisi informasi tentang user yang dienkripsi pakai JWT.
+
