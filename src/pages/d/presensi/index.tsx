@@ -1,6 +1,5 @@
 import HistoryPresence from "@/components/pages/HistoryPresence";
 import TableList from "@/components/TableList";
-import { LocalStorage } from "@/lib/utils/LocalStorage";
 import {
   Button,
   Center,
@@ -13,12 +12,11 @@ import {
   Title
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-import { useState, useEffect, useContext, createContext } from "react";
+import { useState, useContext, createContext } from "react";
 import { RiPlayFill, RiSearchLine, RiStopFill } from "react-icons/ri";
 import { useRouter } from "next/router";
-import { PresenceToStudent } from "@prisma/client";
-import axios from "@/lib/utils/axios";
-import { TOTAL_STUDENT } from "@/constants";
+import axios from "@/lib/axios";
+import StatisticPresence from "@/components/StatisticPresence";
 
 const useStyles = createStyles((theme) => ({
   timeBox: {
@@ -41,70 +39,10 @@ const useStyles = createStyles((theme) => ({
     ":hover": {
       boxShadow: `2px 4px 16px ${theme.colors.blue[6]}66`
     }
-  },
-  presenceMain: {
-    backgroundColor: theme.black,
-    color: theme.white
   }
 }));
 
-const PresenceIdContext = createContext(1);
-
-const StatisticPresences = () => {
-  const { classes } = useStyles();
-
-  const presenceStatistic = [
-    {
-      title: "Presensi terisi",
-      count: 1280
-    },
-    {
-      title: "Hadir",
-      count: 653
-    },
-    {
-      title: "Terlambat",
-      count: 12
-    },
-    {
-      title: "Izin / Sakit",
-      count: 62
-    },
-    {
-      title: "Alpha",
-      count: 32
-    }
-  ];
-
-  return (
-    <>
-      {presenceStatistic.map((val, index) => (
-        <Flex
-          key={val.title}
-          maw="fit-content"
-          gap="xs"
-          align="flex-end"
-          px="md"
-          py="sm"
-          className={index == 0 ? classes.presenceMain : ""}
-          sx={(theme) => ({
-            borderRadius: theme.defaultRadius,
-            border: `1px solid ${theme.colors.dark[0]}`
-          })}>
-          <Flex direction="column">
-            <Text fw={600}>{val.title}</Text>
-            <Title order={6}>
-              {val.count} / {TOTAL_STUDENT}
-            </Title>
-          </Flex>
-          <Text fz="sm">siswa</Text>
-        </Flex>
-      ))}
-    </>
-  );
-};
-
-function PresensiIndex() {
+function PresencePage() {
   const [buttonState, toggleButtonState] = useToggle<{
     title: string;
     class: "stopBtn" | "startBtn";
@@ -121,32 +59,11 @@ function PresensiIndex() {
       icon: <RiPlayFill />
     }
   ]);
-  const presenceId = useContext(PresenceIdContext);
   const [presences, setPresences] = useState<Presence[]>([]);
   const { classes } = useStyles();
   const router = useRouter();
 
-  // const getPresences = async () => {
-  //   return await fetch("https://spps.free.mockoapp.net/presences/today")
-  //     .then((resolve) => resolve.json())
-  //     .then((data) => setPresences(() => data))
-  //     .catch((err) => console.log("Data presensi tidak bisa diambil", err));
-  // };
-
-  axios
-    .get<{ result: PresenceToStudent[] }>(`presence/${presenceId}`)
-    .then((value) => {});
-
-  useEffect(() => {
-    const loginStatus = LocalStorage({
-      method: "get",
-      key: "spps.userInfo"
-    });
-
-    if (!loginStatus) router.push("/login");
-
-    // getPresences();
-  });
+  axios.get<{ result: Presence[] }>("/presence/1").then((value) => {});
 
   return (
     <Flex direction="column" gap="md">
@@ -162,15 +79,15 @@ function PresensiIndex() {
           <Text fw={600}>Jum&#39;at, 13 Januari 2023</Text>
         </Flex>
       </Flex>
-      <Tabs defaultValue="hari-ini">
+      <Tabs defaultValue="today">
         <Tabs.List>
-          <Tabs.Tab value="hari-ini">Presensi</Tabs.Tab>
-          <Tabs.Tab value="riwayat">Riwayat</Tabs.Tab>
+          <Tabs.Tab value="today">Presensi</Tabs.Tab>
+          <Tabs.Tab value="history">Riwayat</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="hari-ini" pt="md">
+        <Tabs.Panel value="today" pt="md">
           <Flex gap="md" wrap="wrap">
-            <StatisticPresences />
+            <StatisticPresence />
           </Flex>
           <Space h="md" />
           <Flex direction="column" gap="md">
@@ -180,7 +97,7 @@ function PresensiIndex() {
                   leftIcon={buttonState.icon}
                   variant="white"
                   onClick={() => toggleButtonState()}
-                  className={classes[buttonState.class]}>
+                  className={classes.startBtn}>
                   {buttonState.title}
                 </Button>
               </Flex>
@@ -205,4 +122,13 @@ function PresensiIndex() {
   );
 }
 
-export default PresensiIndex;
+// export function getStaticProps() {
+//   return {
+//     props: {
+//       id: // nomor
+//     }
+//   };
+// }
+
+export default PresencePage;
+

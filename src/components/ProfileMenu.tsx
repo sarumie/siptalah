@@ -1,4 +1,4 @@
-import { LocalStorage } from "@/lib/utils/LocalStorage";
+import axios from "@/lib/axios";
 import {
   Avatar,
   createStyles,
@@ -8,6 +8,8 @@ import {
   Text,
   UnstyledButton
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { RiArrowDropRightLine, RiLogoutCircleLine } from "react-icons/ri";
 
@@ -23,7 +25,7 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: theme.colors.gray[3]
     }
   },
-  buttonLogOut: {
+  btnLogout: {
     color: theme.colors.red[0],
     backgroundColor: theme.colors.red[8],
     ":hover": {
@@ -32,9 +34,24 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
-function ProfileMenu() {
+const logOut = async () => {
+  const res = await axios.get("/auth/logout");
+  res.status !== 200 && new Error("Tidak bisa logout");
+};
+
+export default function ProfileMenu() {
   const route = useRouter();
   const { classes } = useStyles();
+  const { isLoading, mutate: doLogOut } = useMutation(logOut, {
+    onError: ({ message }: Error) =>
+      showNotification({
+        title: "Gagal keluar",
+        message,
+        color: "red"
+      })
+  });
+
+  const onClickLogOut = () => doLogOut();
 
   return (
     <Menu position="right-end" withArrow>
@@ -68,11 +85,9 @@ function ProfileMenu() {
         <Menu.Item
           icon={<RiLogoutCircleLine />}
           p="lg"
-          className={classes.buttonLogOut}
-          onClick={() => {
-            LocalStorage({ method: "delete", key: "spps.userInfo" });
-            route.push("/login");
-          }}>
+          className={classes.btnLogout}
+          onClick={onClickLogOut}
+          disabled={isLoading}>
           Log Out
         </Menu.Item>
       </Menu.Dropdown>
@@ -80,4 +95,3 @@ function ProfileMenu() {
   );
 }
 
-export default ProfileMenu;

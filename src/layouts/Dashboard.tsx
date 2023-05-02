@@ -1,4 +1,3 @@
-// Mantine
 import {
   AppShell,
   Navbar,
@@ -8,27 +7,19 @@ import {
   createStyles
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-
-// Next
 import { useRouter } from "next/router";
 import Link from "next/link";
-
-// React
-import { useEffect, useState } from "react";
 import { RiDashboardFill, RiGroupFill, RiUser3Fill } from "react-icons/ri";
-
-// Components
 import ProfileMenu from "@/components/ProfileMenu";
+import { GetServerSidePropsContext } from "next";
 
-// Utils
-import { LocalStorage } from "@/lib/utils/LocalStorage";
-
-interface NavLinkProp {
+interface TNavLink {
   label: string;
   Icon: JSX.Element;
-  href: `${"/d/"}${string}`;
-  pathURI: string;
-  level: "BASIC" | "HIGHEST" | "ALL";
+  pagePath: string;
+  // href: `${"/d/"}${string}`;
+  // pathURI: string;
+  isAdminOnly: boolean;
 }
 
 const useStyles = createStyles((theme) => ({
@@ -42,74 +33,37 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
-const initialState = {
-  isLoading: true,
-  userInfo: {
-    fullName: "",
-    level: "",
-    access: []
-  }
-};
-
-const navLinkProp: NavLinkProp[] = [
+const navLinkItems: TNavLink[] = [
   {
     label: "Presensi",
     Icon: <RiDashboardFill size={16} />,
-    href: "/d/presensi",
-    pathURI: "presensi",
-    level: "ALL"
+    pagePath: "presensi",
+    isAdminOnly: false
   },
   {
     label: "Daftar Siswa",
     Icon: <RiUser3Fill size={16} />,
-    href: "/d/siswa",
-    pathURI: "siswa",
-    level: "HIGHEST"
+    pagePath: "siswa",
+    isAdminOnly: true
   },
   {
     label: "Daftar Pengurus",
     Icon: <RiUser3Fill size={16} />,
-    href: "/d/pengurus",
-    pathURI: "pengurus",
-    level: "HIGHEST"
+    pagePath: "pengurus",
+    isAdminOnly: true
   },
   {
     label: "Daftar Jurusan",
     Icon: <RiGroupFill size={16} />,
-    href: "/d/jurusan",
-    pathURI: "jurusan",
-    level: "HIGHEST"
+    pagePath: "jurusan",
+    isAdminOnly: true
   }
 ];
 
-export default function Dashboard({ children }: React.ComponentProps<"div">) {
-  const [oathState, setOathSet] = useState(initialState);
-  const [opened, setOpened] = useToggle();
+export default function Dashboard({ children }: React.PropsWithChildren<{}>) {
+  // const [opened, setOpened] = useToggle();
   const route = useRouter();
   const { classes } = useStyles();
-
-  useEffect(() => {
-    const userInfo = LocalStorage({
-      method: "get",
-      key: "spps.userInfo"
-    });
-
-    if (!userInfo) {
-      route.push("/login");
-    } else {
-      console.log(userInfo.result);
-      setOathSet((state) => {
-        return {
-          isLoading: false,
-          userInfo: {
-            ...userInfo.result
-          }
-        };
-      });
-    }
-  }, [route]);
-
-  console.log(oathState);
 
   return (
     <AppShell
@@ -118,7 +72,7 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
           // p="xs"-0`
           hiddenBreakpoint="md"
           // hidden={opened}
-          hidden={true}
+          // hidden={true}
           width={{ sm: 203, lg: 303 }}>
           <Flex direction="column" h="100%" justify="space-between">
             <Flex w="inherit" direction="inherit" gap="md">
@@ -127,30 +81,21 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
               </Title>
               {/* Navigations */}
               <Flex gap="sm" direction="inherit" px="md">
-                {!oathState.isLoading &&
-                  navLinkProp.map(({ label, pathURI, href, Icon, level }) => {
-                    console.log(oathState.userInfo?.level);
-                    if (
-                      level === "ALL" ||
-                      oathState.userInfo?.level === level
-                    ) {
-                      return (
-                        <NavLink
-                          key={label}
-                          variant={
-                            route.asPath.split("/").includes(pathURI)
-                              ? "filled"
-                              : "light"
-                          }
-                          component={Link}
-                          href={href}
-                          label={label}
-                          icon={Icon}
-                          className={classes.navLink}
-                        />
-                      );
+                {navLinkItems.map(({ label, pagePath, Icon, isAdminOnly }) => (
+                  <NavLink
+                    key={label}
+                    variant={
+                      route.asPath.split("/").includes(pagePath)
+                        ? "filled"
+                        : "light"
                     }
-                  })}
+                    component={Link}
+                    href={`/d/${pagePath}`}
+                    label={label}
+                    icon={Icon}
+                    className={classes.navLink}
+                  />
+                ))}
               </Flex>
             </Flex>
 
@@ -163,3 +108,6 @@ export default function Dashboard({ children }: React.ComponentProps<"div">) {
     </AppShell>
   );
 }
+
+export function getServerSideProps(ctx: GetServerSidePropsContext) {}
+

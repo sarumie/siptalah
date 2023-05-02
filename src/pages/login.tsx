@@ -3,11 +3,11 @@ import {
   Button,
   Text,
   Title,
-  NumberInput,
   Menu,
   UnstyledButton,
   ScrollArea,
-  createStyles
+  createStyles,
+  TextInput
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import axios from "@/lib/axios";
@@ -17,6 +17,7 @@ import { InferGetStaticPropsType } from "next";
 import { Admin } from "@prisma/client";
 import { showNotification } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 const useStyles = createStyles((theme) => ({
   form: {
@@ -35,18 +36,25 @@ const useStyles = createStyles((theme) => ({
   scrollArea: { height: 250 }
 }));
 
-const getAuth = async (email: string) => await axios.post("/login", { email });
+const getAuth = async (email: string) =>
+  await axios.post("/auth/login", { email });
 
 export default function Login({
   contacts
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const { isLoading, mutate: authenticate } = useMutation(getAuth, {
-    onSuccess: () => router.push("/d/presensi"),
-    onError: (error: Error) => {
+    onSuccess: (res) => {
       showNotification({
-        title: "Gagal",
-        message: error.message,
+        title: "Email terkirim!",
+        message: res.data.message,
+        color: "blue"
+      });
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      showNotification({
+        title: "Gagal login",
+        message: error.response ? error.response.data.message : error.message,
         color: "red"
       });
     }
@@ -78,11 +86,10 @@ export default function Login({
         <form onSubmit={onSubmit} className={classes.form}>
           <Flex direction="column" align="center" gap="sm">
             <Title order={4}>Login</Title>
-            <NumberInput
+            <TextInput
               w="100%"
-              name="nip"
-              placeholder="NIP"
-              hideControls
+              name="email"
+              placeholder="Email"
               {...form.getInputProps("email")}
             />
             <Button type="submit" disabled={isLoading} fullWidth>
@@ -90,51 +97,56 @@ export default function Login({
             </Button>
           </Flex>
         </form>
-        <Flex direction="column" align="center">
-          <Text fz="xs" fw={600}>
-            Tidak punya akun?
-          </Text>
-          <Menu
-            shadow="sm"
-            position="top"
-            trigger="hover"
-            openDelay={100}
-            closeDelay={400}>
-            <Menu.Target>
-              <UnstyledButton fz="xs" className={classes.buttonLink}>
-                Hubungi admin untuk pembuatan akun baru
-              </UnstyledButton>
-            </Menu.Target>
+        {contacts.length ? (
+          <Flex direction="column" align="center">
+            <Text fz="xs" fw={600}>
+              Tidak punya akun?
+            </Text>
+            <Menu
+              shadow="sm"
+              position="top"
+              trigger="hover"
+              openDelay={100}
+              closeDelay={400}>
+              <Menu.Target>
+                <UnstyledButton fz="xs" className={classes.buttonLink}>
+                  Hubungi admin untuk pembuatan akun baru
+                </UnstyledButton>
+              </Menu.Target>
 
-            <Menu.Dropdown>
-              <Menu.Label>Daftar Kontak</Menu.Label>
-              <ScrollArea className={classes.scrollArea}>
-                {contacts.map(({ fullName, phoneNumber }) => (
-                  <Menu.Item
-                    key={phoneNumber}
-                    icon={
-                      <RiWhatsappLine size={20} color={theme.colors.dark[3]} />
-                    }
-                    rightSection={<RiArrowRightSLine size={20} />}
-                    px="md"
-                    component="a"
-                    href={`https://wa.me/${phoneNumber}`}
-                    target="_blank"
-                    className={classes.menuItem}>
-                    <Flex direction="column" mr="md">
-                      <Text fz="sm" fw={600}>
-                        {fullName}
-                      </Text>
-                      <Text fz="xs" c="dark.3">
-                        {phoneNumber}
-                      </Text>
-                    </Flex>
-                  </Menu.Item>
-                ))}
-              </ScrollArea>
-            </Menu.Dropdown>
-          </Menu>
-        </Flex>
+              <Menu.Dropdown>
+                <Menu.Label>Daftar Kontak</Menu.Label>
+                <ScrollArea className={classes.scrollArea}>
+                  {contacts.map(({ fullName, phoneNumber }) => (
+                    <Menu.Item
+                      key={phoneNumber}
+                      icon={
+                        <RiWhatsappLine
+                          size={20}
+                          color={theme.colors.dark[3]}
+                        />
+                      }
+                      rightSection={<RiArrowRightSLine size={20} />}
+                      px="md"
+                      component="a"
+                      href={`https://wa.me/${phoneNumber}`}
+                      target="_blank"
+                      className={classes.menuItem}>
+                      <Flex direction="column" mr="md">
+                        <Text fz="sm" fw={600}>
+                          {fullName}
+                        </Text>
+                        <Text fz="xs" c="dark.3">
+                          {phoneNumber}
+                        </Text>
+                      </Flex>
+                    </Menu.Item>
+                  ))}
+                </ScrollArea>
+              </Menu.Dropdown>
+            </Menu>
+          </Flex>
+        ) : null}
       </Flex>
     </Flex>
   );

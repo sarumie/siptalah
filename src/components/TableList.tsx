@@ -22,9 +22,9 @@ import {
 } from "react-icons/ri";
 
 interface Props<T> {
-  data: T[] | null | undefined;
+  data?: T[] | null;
   /**
-   * data will not be shown in the table
+   * Specified data that will not be shown in the table
    */
   ignore?: (keyof T)[] | keyof T;
   ths: NonEmptyArray<string>;
@@ -94,7 +94,7 @@ function TableList<T extends { [key: string]: any }>({
           </thead>
           <tbody>
             {
-              // * Uncommend
+              // * Uncomment
               // data?.length
               !emptyDisplay ? (
                 data?.map((dataInArr) => (
@@ -142,3 +142,4 @@ function TableList<T extends { [key: string]: any }>({
 }
 
 export default TableList;
+

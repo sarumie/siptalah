@@ -1,15 +1,27 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextApiResponse, NextApiRequest } from "next";
-import { prisma } from "prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const contacts = await prisma.administrator.findMany({
-    select: {
-      fullName: true,
-      phoneNumber: true
-    }
-  });
+  /**
+   * Sementara hanya mereturn 5 admin pertama
+   */
+  const contacts = await prisma.admin
+    .findMany({
+      select: {
+        fullName: true,
+        phoneNumber: true
+      },
+      take: 5
+    })
+    .catch((e) => {
+      if (e instanceof PrismaClientKnownRequestError)
+        return { message: e.message };
+    });
+
   res.status(200).json({ result: contacts });
 }
+

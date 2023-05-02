@@ -1,5 +1,5 @@
 import { rand, randFullName, randNumber } from "@ngneat/falso";
-import { prisma } from "./client";
+import { prisma } from "@/lib/prisma";
 
 const LENGTH_DATA = 10;
 
@@ -78,3 +78,4 @@ async function main() {
 }
 
 main().catch((error) => console.log(error));
+

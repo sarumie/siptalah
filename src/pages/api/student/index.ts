@@ -1,4 +1,4 @@
-import { prisma } from "prisma/client";
+import { prisma } from "@/lib/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { cors } from "@/lib/api/cors";
 
@@ -30,3 +30,4 @@ export default async function handler(
     // res.status(500).json({ error });
   }
 }
+
