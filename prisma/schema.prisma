@@ -10,7 +10,7 @@ datasource db {
 
 enum Level {
   ADMIN
-  PETUGAS
+  STAFF
 }
 
 enum Status {
@@ -84,7 +84,7 @@ model Admin {
   updatedAt   DateTime @updatedAt
   fullName    String
   nip         String   @unique
-  level       Level    @default(PETUGAS)
+  level       Level    @default(STAFF)
   access      Major[]
   phoneNumber String
 
