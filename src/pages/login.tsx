@@ -1,51 +1,22 @@
-// Mantine
 import {
   Flex,
   Button,
   Text,
-  Input,
   Title,
   NumberInput,
   Menu,
   UnstyledButton,
-  Notification,
   ScrollArea,
   createStyles
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-
-// Types
-import {
-  LoginStateType,
-  LoginReducerType,
-  AuthPropType
-} from "@/lib/types/login/loginType";
-import { NextRouter } from "next/router";
-import axios from "axios";
-import { LocalStorage } from "@/lib/utils/LocalStorage";
-import Link from "next/link";
+import axios from "@/lib/axios";
 import { useRouter } from "next/router";
-import { useEffect, useReducer } from "react";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
-
-const useStyles = createStyles((theme) => ({
-  form: {
-    all: "inherit"
-  },
-  buttonLink: {
-    color: theme.black,
-    textDecoration: "underline",
-    padding: 0,
-    ":hover": {
-      color: theme.colors.dark[3],
-      cursor: "pointer"
-    }
-  }
-}));
-
-const InheritStyledForm = styled.form`
-  all: inherit;
-`;
+import { InferGetStaticPropsType } from "next";
+import { Admin } from "@prisma/client";
+import { showNotification } from "@mantine/notifications";
+import { useMutation } from "@tanstack/react-query";
 
 const useStyles = createStyles((theme) => ({
   form: {
@@ -60,134 +31,35 @@ const useStyles = createStyles((theme) => ({
       cursor: "pointer"
     }
   },
-  menuItem: { gap: theme.spacing.sm }
+  menuItem: { gap: theme.spacing.sm },
+  scrollArea: { height: 250 }
 }));
 
-const initialState: LoginStateType = {
-  isLoading: false,
-  pass: false,
-  message: ""
-};
-
-const reducer: LoginReducerType = (state, { type, payload }) => {
-  switch (type) {
-    case "handleReset":
-      return {
-        isLoading: false,
-        pass: false,
-        message: ""
-      };
-
-    case "handleLoading":
-      return {
-        ...state,
-        isLoading: payload?.isLoading
-      };
-
-    case "handleMessage":
-      return {
-        ...state,
-        message: payload?.message
-      };
-
-    case "handleFail":
-      return {
-        ...state,
-        message: payload?.message,
-        isLoading: payload?.isLoading
-      };
-
-    case "handleSuccess":
-      return {
-        ...state,
-        message: "",
-        isLoading: false,
-        pass: payload?.pass
-      };
-  }
-};
-
-async function auth({
-  fullName,
-  nip,
-  href,
-  router,
-  loginDispatch
-}: AuthPropType) {
-  // Actived Loading State
-  loginDispatch({
-    type: "handleLoading",
-    payload: {
-      isLoading: true
-    }
-  });
-
-  // Start Authentication
-  const { data } = await axios.post("/api/auth/login", {
-    nip,
-    fullName
-  });
-
-  const parsedData = data.result;
-
-  if (!parsedData) {
-    loginDispatch({
-      type: "handleFail",
-      payload: {
-        isLoading: false,
-        message: "Nama atau NIP anda salah!"
-      }
-    });
-  }
-
-  loginDispatch({
-    type: "handleReset"
-  });
-
-  LocalStorage({
-    key: "spps.userInfo",
-    method: "set",
-    value: data
-  });
-
-  router.replace(href!);
-}
+const getAuth = async (email: string) => await axios.post("/login", { email });
 
 export default function Login({
   contacts
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [loginState, setLoginState] = useReducer(reducer, initialState);
   const router = useRouter();
+  const { isLoading, mutate: authenticate } = useMutation(getAuth, {
+    onSuccess: () => router.push("/d/presensi"),
+    onError: (error: Error) => {
+      showNotification({
+        title: "Gagal",
+        message: error.message,
+        color: "red"
+      });
+    }
+  });
   const { classes, theme } = useStyles();
+
   const form = useForm({
     initialValues: {
-      fullName: "",
-      nip: ""
+      email: ""
     }
   });
 
-  useEffect(() => {
-    const loginStatus = LocalStorage({
-      method: "get",
-      key: "spps.userInfo"
-    });
-
-    if (loginStatus) router.replace("/d/presensi");
-
-    setLoginState({
-      type: "handleReset"
-    });
-  }, [router]);
-
-  const getAuth = form.onSubmit((values) =>
-    auth({
-      router,
-      fullName: values.fullName,
-      nip: values.nip,
-      href: "/d/presensi",
-      loginDispatch: setLoginState
-    })
-  );
+  const onSubmit = form.onSubmit(async (values) => authenticate(values.email));
 
   return (
     <Flex h="100vh" justify="center" align="center">
@@ -200,43 +72,21 @@ export default function Login({
         wrap="wrap">
         <Flex direction="column" align="center">
           <Title order={1}>SPPS</Title>
-          <Text c="dark.3">Sistem Pengelolaan Data Presensi Siswa</Text>
+          <Text c="dark.3">Sistem Pengelolaan Presensi Siswa</Text>
         </Flex>
 
-        {loginState.message && (
-          <Notification
-            color={"red"}
-            radius="md"
-            onClick={() =>
-              setLoginState({
-                type: "handleMessage",
-                payload: {
-                  message: ""
-                }
-              })
-            }>
-            <p>{loginState.message}</p>
-          </Notification>
-        )}
-
-        <form onSubmit={getAuth} className={classes.form}>
+        <form onSubmit={onSubmit} className={classes.form}>
           <Flex direction="column" align="center" gap="sm">
             <Title order={4}>Login</Title>
-            <Input
-              w="100%"
-              name="fullName"
-              placeholder="Nama Lengkap"
-              {...form.getInputProps("fullName")}
-            />
             <NumberInput
               w="100%"
               name="nip"
               placeholder="NIP"
               hideControls
-              {...form.getInputProps("nip")}
+              {...form.getInputProps("email")}
             />
-            <Button type="submit" disabled={loginState.isLoading} fullWidth>
-              {loginState.isLoading ? "Autentikasi..." : "Masuk"}
+            <Button type="submit" disabled={isLoading} fullWidth>
+              Login
             </Button>
           </Flex>
         </form>
@@ -258,7 +108,7 @@ export default function Login({
 
             <Menu.Dropdown>
               <Menu.Label>Daftar Kontak</Menu.Label>
-              <ScrollArea style={{ height: 250 }}>
+              <ScrollArea className={classes.scrollArea}>
                 {contacts.map(({ fullName, phoneNumber }) => (
                   <Menu.Item
                     key={phoneNumber}
@@ -293,7 +143,7 @@ export default function Login({
 export async function getStaticProps() {
   const {
     data: { result: contacts }
-  } = await axios.get<{ result: Administrator[] }>("contact");
+  } = await axios.get<{ result: Admin[] }>("contact");
 
   return {
     props: {
@@ -301,3 +151,4 @@ export async function getStaticProps() {
     }
   };
 }
+
