@@ -1,33 +1,14 @@
 import { prisma } from "@/lib/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { cors } from "@/lib/api/cors";
+import { withCORS } from "@/lib/api/withCORS";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default withCORS(async (req, res) => {
   try {
-    // actived cors
-    await cors(req, res);
-
     const { query } = req;
-    const data = await prisma.student.findMany({
-      include: {
-        profile: {
-          select: {
-            fullName: true,
-            email: true,
-            password: true
-          }
-        }
-      }
-    });
+    const data = await prisma.student.findMany({});
 
-    console.log(query);
-
-    res.status(200).json({ data, params: query });
+    return res.status(200).json({ data, params: query });
   } catch (error) {
     // res.status(500).json({ error });
   }
-}
+});
 
