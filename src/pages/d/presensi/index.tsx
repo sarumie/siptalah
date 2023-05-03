@@ -12,10 +12,10 @@ import {
   Title
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-import { useState, useContext, createContext } from "react";
+import { useState } from "react";
 import { RiPlayFill, RiSearchLine, RiStopFill } from "react-icons/ri";
 import { useRouter } from "next/router";
-import axios from "@/lib/axios";
+import { axios } from "@/lib/client";
 import StatisticPresence from "@/components/StatisticPresence";
 
 const useStyles = createStyles((theme) => ({
@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
-function PresencePage() {
+export default function PresencePage() {
   const [buttonState, toggleButtonState] = useToggle<{
     title: string;
     class: "stopBtn" | "startBtn";
@@ -129,6 +129,4 @@ function PresencePage() {
 //     }
 //   };
 // }
-
-export default PresencePage;
 

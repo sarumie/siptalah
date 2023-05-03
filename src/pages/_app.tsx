@@ -7,7 +7,7 @@ import Dashboard from "@/layouts/Dashboard";
 import { useRouter } from "next/router";
 import { NotificationsProvider } from "@mantine/notifications";
 import { QueryClientProvider } from "@tanstack/react-query";
-import queryClient from "@/lib/reactQuery";
+import { queryClient } from "@/lib/client";
 
 export default function App(props: AppProps) {
   const route = useRouter();

@@ -10,11 +10,11 @@ import {
   TextInput
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import axios from "@/lib/axios";
+import { axios } from "@/lib/client";
 import { useRouter } from "next/router";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 import { InferGetStaticPropsType } from "next";
-import { Admin } from "@prisma/client";
+import type { Admin } from "@prisma/client";
 import { showNotification } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
