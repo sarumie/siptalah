@@ -10,7 +10,7 @@ import {
   TextInput
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { axios } from "@/lib/client";
+import axios from "@/lib/axios";
 import { useRouter } from "next/router";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 import { InferGetStaticPropsType } from "next";

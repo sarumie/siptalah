@@ -1,6 +1,6 @@
 import { NextApiResponse, NextApiRequest } from "next";
 import { baseUrl } from "@/lib/utils";
-import { supabase } from "@/lib/client";
+import supabase from "@/lib/supabase";
 
 export default async function handler(
   req: NextApiRequest,

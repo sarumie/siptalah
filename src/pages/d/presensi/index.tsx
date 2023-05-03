@@ -15,7 +15,7 @@ import { useToggle } from "@mantine/hooks";
 import { useState } from "react";
 import { RiPlayFill, RiSearchLine, RiStopFill } from "react-icons/ri";
 import { useRouter } from "next/router";
-import { axios } from "@/lib/client";
+import axios from "@/lib/axios";
 import StatisticPresence from "@/components/StatisticPresence";
 
 const useStyles = createStyles((theme) => ({

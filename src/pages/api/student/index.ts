@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/client";
+import prisma from "@/lib/prisma";
 import { withCORS } from "@/lib/api/withCORS";
 
 export default withCORS(async (req, res) => {
