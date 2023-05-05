@@ -1,4 +1,4 @@
-import { axios } from "@/lib/client";
+import axios from "@/lib/axios";
 import {
   Avatar,
   createStyles,
