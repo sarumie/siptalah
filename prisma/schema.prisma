@@ -27,6 +27,7 @@ model Presence {
   isOpen    Boolean  @default(false)
 
   student Student[]
+  status  Status
 }
 
 model Student {
