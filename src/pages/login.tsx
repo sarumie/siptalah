@@ -13,11 +13,12 @@ import { useForm } from "@mantine/form";
 import axios from "@/lib/axios";
 import { useRouter } from "next/router";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
-import { InferGetStaticPropsType } from "next";
-import type { Admin } from "@prisma/client";
 import { showNotification } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import type { Admin } from "@prisma/client";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const useStyles = createStyles((theme) => ({
   form: {
@@ -41,7 +42,7 @@ const getAuth = async (email: string) =>
 
 export default function Login({
   contacts
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { isLoading, mutate: authenticate } = useMutation(getAuth, {
     onSuccess: (res) => {
@@ -60,7 +61,6 @@ export default function Login({
     }
   });
   const { classes, theme } = useStyles();
-
   const form = useForm({
     initialValues: {
       email: ""
@@ -152,7 +152,23 @@ export default function Login({
   );
 }
 
-export async function getStaticProps() {
+export const getServerSideProps: GetServerSideProps<{
+  contacts: Admin[];
+}> = async (ctx) => {
+  const supabase = createServerSupabaseClient(ctx);
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (session)
+    return {
+      redirect: {
+        destination: "/d/presensi",
+        permanent: false
+      }
+    };
+
   const {
     data: { result: contacts }
   } = await axios.get<{ result: Admin[] }>("contact");
@@ -162,5 +178,5 @@ export async function getStaticProps() {
       contacts
     }
   };
-}
+};
 
