@@ -6,7 +6,7 @@ import {
   RiInformationFill,
   RiSearchLine
 } from "react-icons/ri";
-import TableList from "../TableList";
+import TableList from "@/components/TableList";
 
 const useStyles = createStyles((theme) => ({
   btnInfo: {
