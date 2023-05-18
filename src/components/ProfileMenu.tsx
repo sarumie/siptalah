@@ -1,4 +1,4 @@
-import axios from "@/lib/axios";
+import supabase from "@/lib/supabase";
 import {
   Avatar,
   createStyles,
@@ -9,8 +9,8 @@ import {
   UnstyledButton
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { type MouseEventHandler, useState } from "react";
 import { RiArrowDropRightLine, RiLogoutCircleLine } from "react-icons/ri";
 
 const useStyles = createStyles((theme) => ({
@@ -34,24 +34,23 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
-const logOut = async () => {
-  const res = await axios.get("/auth/logout");
-  res.status !== 200 && new Error("Tidak bisa logout");
-};
-
 export default function ProfileMenu() {
   const route = useRouter();
+  const [isDisabled, setIsDisabled] = useState(false);
   const { classes } = useStyles();
-  const { isLoading, mutate: doLogOut } = useMutation(logOut, {
-    onError: ({ message }: Error) =>
-      showNotification({
-        title: "Gagal keluar",
-        message,
-        color: "red"
-      })
-  });
 
-  const onClickLogOut = () => doLogOut();
+  const onClickLogOut: MouseEventHandler<HTMLButtonElement> = async () => {
+    setIsDisabled(true);
+    const { error } = await supabase.auth.signOut();
+    if (!error) return route.push("/login");
+
+    showNotification({
+      title: "Gagal logout",
+      message: error?.message || "Terjadi kesalahan saat logout",
+      color: "red"
+    });
+    setIsDisabled(false);
+  };
 
   return (
     <Menu position="right-end" withArrow>
@@ -60,7 +59,8 @@ export default function ProfileMenu() {
           <Grid align="center">
             <Grid.Col span="auto">
               <Avatar
-                // src="https://waifu.now.sh/sfw/neko"
+                // TODO: Change this to user's avatar link
+                src="https://waifu.now.sh/sfw/neko"
                 radius={999}
               />
             </Grid.Col>
@@ -68,10 +68,10 @@ export default function ProfileMenu() {
             <Grid.Col span={8}>
               <Flex direction="column">
                 <Text fw={600} truncate>
-                  Gloria G. Johnsonnnnnnnn
+                  Sandy Raja Alamsyah
                 </Text>
                 <Text color="dark.3" size="xs" truncate>
-                  mumumumumumumumumumu@gmail.com
+                  lagimakanpecelbuimas@gmail.com
                 </Text>
               </Flex>
             </Grid.Col>
@@ -87,7 +87,7 @@ export default function ProfileMenu() {
           p="lg"
           className={classes.btnLogout}
           onClick={onClickLogOut}
-          disabled={isLoading}>
+          disabled={isDisabled}>
           Log Out
         </Menu.Item>
       </Menu.Dropdown>
