@@ -4,12 +4,18 @@
  */
 
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import type { GetServerSideProps } from "next";
+import type { GetServerSideProps, GetServerSidePropsResult } from "next";
 
 /**
- * Memvalidasi apakah user sudah login atau belum.
+ * Memberi hak akses untuk user yang sudah login.
  */
-export function requireSupaAuth(gssp?: GetServerSideProps): GetServerSideProps {
+export function requireSupaAuth(gssp: undefined): GetServerSideProps;
+export function requireSupaAuth<Props extends { [key: string]: unknown }>(
+  gssp: GetServerSideProps<Props>
+): GetServerSideProps<Props>;
+export function requireSupaAuth<Props extends { [key: string]: unknown }>(
+  gssp?: GetServerSideProps<Props>
+): GetServerSideProps<Props | {}> {
   return async (ctx) => {
     const supabase = createServerSupabaseClient(ctx);
 
@@ -24,6 +30,33 @@ export function requireSupaAuth(gssp?: GetServerSideProps): GetServerSideProps {
           permanent: false
         }
       };
+
+    return gssp ? await gssp(ctx) : { props: {} };
+  };
+}
+
+/**
+ * Mencegah user yang sudah login untuk mengakses halaman tertentu.
+ */
+export function requireSupaUnAuth(gssp: undefined): GetServerSideProps;
+export function requireSupaUnAuth<Props extends { [key: string]: unknown }>(
+  gssp: GetServerSideProps<Props>
+): GetServerSideProps<Props>;
+export function requireSupaUnAuth<Props extends { [key: string]: unknown }>(
+  gssp?: GetServerSideProps<Props>
+): GetServerSideProps<Props | {}> {
+  return async (ctx) => {
+    const supabase = createServerSupabaseClient(ctx);
+    const { data: session } = await supabase.auth.getSession();
+
+    if (session) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false
+        }
+      };
+    }
 
     return gssp ? await gssp(ctx) : { props: {} };
   };
