@@ -11,7 +11,6 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import axios from "@/lib/axios";
-import { useRouter } from "next/router";
 import { RiWhatsappLine, RiArrowRightSLine } from "react-icons/ri";
 import { showNotification } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import { AxiosError } from "axios";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import type { Admin } from "@prisma/client";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { requireSupaUnAuth } from "@/hogssp";
 
 const useStyles = createStyles((theme) => ({
   form: {
@@ -43,7 +43,6 @@ const getAuth = async (email: string) =>
 export default function Login({
   contacts
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const router = useRouter();
   const { isLoading, mutate: authenticate } = useMutation(getAuth, {
     onSuccess: (res) => {
       showNotification({
@@ -55,17 +54,13 @@ export default function Login({
     onError: (error: AxiosError<{ message: string }>) => {
       showNotification({
         title: "Gagal login",
-        message: error.response ? error.response.data.message : error.message,
+        message: error.response?.data.message || error.message,
         color: "red"
       });
     }
   });
   const { classes, theme } = useStyles();
-  const form = useForm({
-    initialValues: {
-      email: ""
-    }
-  });
+  const form = useForm({ initialValues: { email: "" } });
 
   const onSubmit = form.onSubmit(async (values) => authenticate(values.email));
 
@@ -152,31 +147,15 @@ export default function Login({
   );
 }
 
-export const getServerSideProps: GetServerSideProps<{
-  contacts: Admin[];
-}> = async (ctx) => {
-  const supabase = createServerSupabaseClient(ctx);
-
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
-
-  if (session)
+export const getServerSideProps = requireSupaUnAuth<{ contacts: Admin[] }>(
+  async (ctx) => {
+    const {
+      data: { result: contacts }
+    } = await axios.get<{ result: Admin[] }>("contact");
     return {
-      redirect: {
-        destination: "/d/presensi",
-        permanent: false
+      props: {
+        contacts
       }
     };
-
-  const {
-    data: { result: contacts }
-  } = await axios.get<{ result: Admin[] }>("contact");
-
-  return {
-    props: {
-      contacts
-    }
-  };
-};
-
+  }
+);
