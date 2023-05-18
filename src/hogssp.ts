@@ -9,9 +9,9 @@ import type { GetServerSideProps, GetServerSidePropsResult } from "next";
 /**
  * Memberi hak akses untuk user yang sudah login.
  */
-export function requireSupaAuth(gssp: undefined): GetServerSideProps;
+export function requireSupaAuth(): GetServerSideProps;
 export function requireSupaAuth<Props extends { [key: string]: unknown }>(
-  gssp: GetServerSideProps<Props>
+  gssp?: GetServerSideProps<Props>
 ): GetServerSideProps<Props>;
 export function requireSupaAuth<Props extends { [key: string]: unknown }>(
   gssp?: GetServerSideProps<Props>
@@ -38,9 +38,9 @@ export function requireSupaAuth<Props extends { [key: string]: unknown }>(
 /**
  * Mencegah user yang sudah login untuk mengakses halaman tertentu.
  */
-export function requireSupaUnAuth(gssp: undefined): GetServerSideProps;
+export function requireSupaUnAuth(): GetServerSideProps;
 export function requireSupaUnAuth<Props extends { [key: string]: unknown }>(
-  gssp: GetServerSideProps<Props>
+  gssp?: GetServerSideProps<Props>
 ): GetServerSideProps<Props>;
 export function requireSupaUnAuth<Props extends { [key: string]: unknown }>(
   gssp?: GetServerSideProps<Props>
